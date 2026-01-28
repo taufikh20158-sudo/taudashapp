@@ -364,11 +364,36 @@ body, html { width: 100vw; height: 100vh; overflow: hidden; background: var(--bg
 
 /* --- GRUP AKSI DI DALAM TABEL --- */
 /* --- PENGATURAN TABEL EKSTREM (FORCED) --- */
+/* --- PERBAIKAN TABRAKAN KOLOM --- */
 .main-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 10px;
-    table-layout: fixed; /* Memaksa kolom patuh pada width di bawah */
+    table-layout: auto !important; /* Ubah ke auto agar kolom menyesuaikan isi */
+}
+
+/* Kolom Kode: Beri ruang yang cukup dan jangan biarkan teks keluar */
+.main-table th:nth-child(1), 
+.main-table td:nth-child(1) { 
+    width: 100px !important; 
+    padding-right: 15px;
+    white-space: nowrap; /* Kode tidak akan turun ke bawah */
+}
+
+/* Kolom Program: Buat fleksibel dan lebar */
+.main-table th:nth-child(2), 
+.main-table td:nth-child(2) { 
+    width: auto !important; 
+    min-width: 200px; /* Minimal ruang untuk teks program */
+}
+
+/* Pastikan teks detail tidak memaksa satu baris panjang */
+.text-detail {
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--accent-blue);
+    word-break: break-all; /* Memotong kata jika terlalu panjang agar tidak menabrak */
+    white-space: normal;  /* Mengizinkan teks turun ke baris baru */
 }
 
 /* 1. KOLOM KODE: Dikunci kecil */
@@ -1205,3 +1230,55 @@ tr:hover .value-badge {
 
 .modal-buttons button:hover { transform: translateY(-3px); }
 .btn-cancel:hover { box-shadow: var(--shadow-inner); }
+
+/* --- PERBAIKAN TATA LETAK KARTU CON3 --- */
+
+/* Kontainer utama kartu */
+.k-card {
+    background: #ffffff;
+    padding: 18px; /* Padding lebih luas agar slim */
+    border-radius: 18px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 4px 4px 10px #d1d9e6, -4px -4px 10px #ffffff;
+    border-left: 5px solid #ddd; /* Warna indikator dinamis */
+    transition: 0.3s ease;
+}
+
+/* Area teks (Kode + Nama) */
+.k-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Memberi jarak vertikal agar teks tidak mepet kode */
+    flex: 1;
+    padding-right: 20px; /* Jarak aman agar tidak mepet angka % di kanan */
+}
+
+/* Gaya untuk Kode (01.01.xx) */
+.k-code {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--accent-gold);
+    letter-spacing: 1px;
+    display: block;
+}
+
+/* Gaya untuk Nama Program/Kegiatan */
+.k-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-blue);
+    line-height: 1.5; /* Memberi ruang antar baris jika teks panjang */
+    word-break: break-word; /* Mencegah teks meluap */
+}
+
+/* Gaya untuk angka persentase di ujung kanan */
+.k-pct {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--accent-blue);
+    min-width: 45px;
+    text-align: right;
+}
