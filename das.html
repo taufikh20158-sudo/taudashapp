@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Monitoring - DAS 2026</title>
+    <link rel="stylesheet" href="das-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&family=Inter:wght@900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="MASTERMAIN">
+        <aside id="CONSIDEBAR">        
+            <nav class="nav-das">
+                <div class="menu-item" onclick="location.href='index.html'">
+                    <span class="menu-icon">🏠</span> 
+                    <span>Utama</span>
+                </div>
+                <div class="menu-item active">
+                    <span class="menu-icon">📊</span> 
+                    <span>Dashboard</span>
+                </div>
+            </nav>
+        </aside>
+
+        <main id="MAIN_CONTENT_AREA">
+            
+            <section id="CON1">
+                <div class="das-container">
+                    <div class="das-item">
+                        <span class="das-title">Pagu Tahunan</span>
+                        <h2 class="das-value" id="VIEW_PAGU_TOTAL">Rp 0</h2>
+                    </div>
+                    <div class="das-item">
+                        <span class="das-title">Capaian Tahunan</span>
+                        <h2 class="das-value gold-text" id="VIEW_ACV_TOTAL">Rp 0</h2>
+                    </div>
+                    <div class="das-item">
+                        <span class="das-title">Persentase</span>
+                        <h2 class="das-value" id="VIEW_PCT_TOTAL">0%</h2>
+                    </div>
+                </div>
+            </section>
+
+            <section id="CON2">
+                <div class="menu-bar-horizontal">
+                    <div class="group-left">
+                        <h3 class="header-title">Monitoring<span>RPD</span></h3>
+                    </div>
+                    <div class="month-selector">
+                        <select id="SL_BULAN_DASH" onchange="renderExecutiveDashboard()">
+                            <option value="Januari">Januari</option>
+                            <option value="Februari">Februari</option>
+                            <option value="Maret">Maret</option>
+                            <option value="April">April</option>
+                            <option value="Mei">Mei</option>
+                            <option value="Juni">Juni</option>
+                            <option value="Juli">Juli</option>
+                            <option value="Agustus">Agustus</option>
+                            <option value="September">September</option>
+                            <option value="Oktober">Oktober</option>
+                            <option value="November">November</option>
+                            <option value="Desember">Desember</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="kanban-grid" style="margin-top: 15px;">
+                    <div class="kanban-col"><div class="col-head bg-red">KRITIS</div></div>
+                    <div class="kanban-col"><div class="col-head bg-yellow">WASPADA</div></div>
+                    <div class="kanban-col"><div class="col-head bg-green">AMAN</div></div>
+                </div>
+            </section>
+
+            <section id="CON3">
+                <div class="con3-content">
+                    <div class="kanban-grid">
+                        <div class="kanban-col"><div id="LIST_RED"></div></div>
+                        <div class="kanban-col"><div id="LIST_YELLOW"></div></div>
+                        <div class="kanban-col"><div id="LIST_GREEN"></div></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+<script src="das-script.js"></script>
+</body>
+</html>

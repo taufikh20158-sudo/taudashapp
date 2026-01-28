@@ -1,0 +1,1207 @@
+:root {
+    --bg-master: #f0f3f7;
+    --bg-panel: #ffffff;
+    --accent-gold: #d4af37;
+    --accent-blue: #2c3e50;
+    --shadow-outer: 10px 10px 20px #d1d9e6, -10px -10px 20px #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body, html { width: 100vw; height: 100vh; overflow: hidden; background: var(--bg-master); }
+
+#MASTERMAIN {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    gap: 20px;
+}
+/* --- SIDEBAR----------------------------------------------------------------- */
+/* --- SIDEBAR BRAND: PERBESAR & BOLD --- */
+#CONSIDEBAR {
+    width: 240px; /* Sedikit lebih lebar agar brand bernapas */
+    min-width: 240px;
+    background: var(--bg-panel);
+    border-radius: 35px;
+    box-shadow: var(--shadow-outer);
+    display: flex;
+    flex-direction: column;
+    padding: 40px 20px;
+    border: 1px solid rgba(255,255,255,0.6);
+    align-items: center;
+}
+
+.brand-main {
+    font-size: 26px; /* Lebih besar */
+    font-weight: 900; /* Sangat Bold */
+    color: var(--accent-blue);
+    letter-spacing: 4px; /* Jarak antar huruf mewah */
+    line-height: 1;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1); /* Efek timbul pada teks */
+}
+
+/* --- PERKEREN MENU ITEM --- */
+.menu-item {
+    width: 100%;
+    height: 60px; /* Lebih tinggi agar lebih tegas */
+    margin-bottom: 20px;
+    background: #f0f4f8;
+    border-radius: 20px;
+    padding: 0 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--accent-blue);
+    font-weight: 700; /* Bold pada menu */
+    font-size: 15px;
+    box-shadow: 5px 5px 10px #d1d9e6, -5px -5px 10px #ffffff;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(255,255,255,0.8);
+}
+
+.menu-item:hover {
+    transform: translateY(-6px); /* Lebih tinggi melayangnya */
+    color: var(--accent-gold);
+    box-shadow: 15px 15px 25px #c2ccdb, -10px -10px 20px #ffffff;
+    border-color: var(--accent-gold);
+}
+
+.menu-item.active {
+    background: var(--accent-blue);
+    color: var(--accent-gold);
+    box-shadow: inset 8px 8px 15px rgba(0,0,0,0.3), 
+                inset -5px -5px 12px rgba(255,255,255,0.1);
+    transform: scale(0.97); /* Efek mengecil saat ditekan */
+}
+
+/* Mempertegas Ikon */
+.menu-icon {
+    font-size: 20px;
+    filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1));
+}
+/* --- SIDEBAR END------------------------------------------------------------ */
+
+/* --- KUNCI: AREA KONTEN HARUS COLUMN --- */
+#MAIN_CONTENT_AREA {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Vertikal: CON1 atas, CON2 tengah, CON3 bawah */
+    gap: 20px;
+    min-width: 0; /* Mencegah elemen meledak keluar */
+    height: 100%;
+}
+
+#CON1, #CON2, #CON3 {
+    width: 100%;
+    background: var(--bg-panel);
+    border-radius: 25px;
+    padding: 20px;
+    box-shadow: var(--shadow-outer);
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* Sangat penting untuk flexbox */
+}
+
+/* Pengaturan Tinggi */
+#CON1 { height: 130px; flex-shrink: 0; }
+#CON2 { height: 130px; flex-shrink: 0; }
+#CON3 { flex: 1; overflow: hidden; } /* CON3 mengisi sisa ruang */
+
+/* --- LAYOUT DASAR DI CON1 (ANTI PECAH) --- */
+.das-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    height: 70px;
+}
+
+.das-item {
+    flex: 1;
+    min-width: 0; /* Kunci agar teks panjang tidak merusak kotak */
+    background: #f8f9fb;
+    border-radius: 15px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #ffffff;
+    border: 1px solid rgba(255,255,255,0.7);
+}
+
+.das-title { font-size: 10px; font-weight: 700; color: #8e9aaf; text-transform: uppercase; }
+.das-value { font-size: 18px; font-weight: 800; color: var(--accent-blue); }
+.gold-text { color: var(--accent-gold) !important; }
+
+/* --- SCROLLING CON3 --- */
+.con3-content {
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+/* --- CUSTOM SCROLLBAR UNTUK CON3 --- */
+.con3-content::-webkit-scrollbar {
+    width: 7px; /* Ukuran slim dan elegan */
+}
+
+.con3-content::-webkit-scrollbar-track {
+    background: #f0f3f7;
+    border-radius: 10px;
+    margin: 10px 0; /* Memberi jarak agar tidak menempel ke atas/bawah */
+    box-shadow: inset 2px 2px 5px #d1d9e6, inset -2px -2px 5px #ffffff; /* Efek Neumorphic */
+}
+
+.con3-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent-gold), #b8860b); /* Warna Emas */
+    border-radius: 10px;
+    border: 2px solid #ffffff; /* Memberi efek pemisah yang bersih */
+}
+
+.con3-content::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-blue); /* Berubah Biru saat disentuh agar interaktif */
+}
+/* --- CUSTOM SCROLLBAR UNTUK CON3 END --- */
+
+/* --- INDIKATOR --- */
+/* --- INDIKATOR MEWAH DAS4 --- */
+.indicator-box { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    margin-top: 8px;
+    padding: 5px 12px;
+    background: #f0f3f7;
+    border-radius: 20px;
+    box-shadow: inset 2px 2px 5px #d1d9e6, inset -2px -2px 5px #ffffff; /* Efek masuk ke dalam */
+    width: fit-content;
+}
+
+.dot { 
+    width: 10px; 
+    height: 10px; 
+    background: #2ecc71; 
+    border-radius: 50%; 
+    position: relative;
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.8); /* Cahaya neon hijau */
+}
+
+/* Animasi pendaran cahaya di sekitar dot */
+.dot::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    border-radius: 50%;
+    animation: indicator-pulse 2s infinite ease-out;
+}
+
+.status-text { 
+    font-size: 11px; 
+    font-weight: 800; 
+    color: #27ae60; 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* KEYFRAMES UNTUK EFEK DENYUT CAHAYA */
+@keyframes indicator-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    70% {
+        transform: scale(3);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+/* --- LAYOUT MENU BAR CON2 ---------------------------------------------------- */
+.menu-bar-horizontal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding: 0 5px;
+}
+
+.group-left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Jarak antara search dan select */
+}
+
+/* --- PENYESUAIAN TOMBOL CON2 (UKURAN SEDANG/PAS) --- */
+.action-menu-con2 {
+    display: flex;
+    gap: 10px; /* Jarak antar tombol yang nyaman */
+    align-items: center;
+}
+
+.btn-action {
+    height: 38px; /* Ukuran sedang, tidak terlalu kecil */
+    padding: 0 16px;
+    font-size: 12px; 
+    font-weight: 700;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.9);
+    background: #f0f4f8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    /* Efek Neumorphic yang lebih tegas */
+    box-shadow: 4px 4px 8px #d1d9e6, -2px -2px 6px #ffffff;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 6px 6px 12px #d1d9e6, -3px -3px 8px #ffffff;
+}
+
+.btn-action:active {
+    transform: translateY(0);
+    box-shadow: inset 3px 3px 6px #d1d9e6, inset -2px -2px 5px #ffffff;
+}
+
+/* Penegasan warna ikon/teks agar tetap elegan */
+.btn-save { color: #27ae60; }
+.btn-pdf { color: #d35400; }
+.btn-delete { color: #c0392b; }
+.btn-copy { color: #2980b9; }
+.btn-tambah { color: #8e44ad; }
+
+/* Styling Input agar selaras */
+.search-box input, .month-selector select {
+    width: 280px;
+    height: 42px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.8);
+    background: #f8f9fb;
+    box-shadow: inset 3px 3px 6px #d1d9e6, inset -3px -3px 6px #ffffff;
+    padding: 0 15px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    outline: none;
+}
+.btn-pdf {
+    background: #f0f4f8;
+    color: #e67e22; /* Warna Oranye untuk PDF */
+    box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #ffffff;
+    font-weight: 800;
+    border-radius: 10px;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-pdf:active {
+    box-shadow: inset 2px 2px 5px #d1d9e6, inset -2px -2px 5px #ffffff;
+}
+
+/* Sembunyikan kolom AKSI saat print PDF agar rapi */
+@media print {
+    .action-group, th:last-child, td:last-child {
+        display: none !important;
+    }
+}
+/* --- LAYOUT MENU BAR CON2 END ---------------------------------------------------- */
+/* --- STYLING TABEL KONTEN UTAMA --- */
+.main-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.main-table th {
+    padding: 12px 15px;
+    color: var(--accent-blue);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    background: #f8f9fb;
+}
+
+.main-table tbody tr {
+    background: #ffffff;
+    box-shadow: 3px 3px 8px #d1d9e6, -3px -3px 8px #ffffff;
+    transition: all 0.2s ease;
+}
+
+.main-table td {
+    padding: 12px 15px;
+    color: var(--accent-blue);
+    vertical-align: middle;
+    font-size: 13px;
+}
+
+/* Detail Teks Program */
+.text-detail {
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--accent-blue);
+}
+
+.font-bold { font-weight: 800; }
+
+/* Wrapper untuk ACV / Pencapaian */
+.acv-wrapper { width: 100%; }
+.acv-text { font-size: 11px; font-weight: 800; color: var(--accent-gold); }
+.acv-bar { 
+    width: 100%; height: 6px; background: #eee; border-radius: 10px; 
+    margin-top: 4px; overflow: hidden; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
+}
+.acv-fill { height: 100%; background: var(--accent-gold); border-radius: 10px; }
+
+/* --- GRUP AKSI DI DALAM TABEL --- */
+/* --- PENGATURAN TABEL EKSTREM (FORCED) --- */
+.main-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    table-layout: fixed; /* Memaksa kolom patuh pada width di bawah */
+}
+
+/* 1. KOLOM KODE: Dikunci kecil */
+.main-table th:nth-child(1), 
+.main-table td:nth-child(1) { 
+    width: 80px !important; 
+}
+
+/* 2. KOLOM PROGRAM: Diberi keleluasaan penuh (Auto) */
+.main-table th:nth-child(2), 
+.main-table td:nth-child(2) { 
+    width: auto !important; 
+}
+
+/* 3. KOLOM VALUE (Pagu & Capaian): Dikunci sedang */
+.main-table th:nth-child(3), .main-table td:nth-child(3),
+.main-table th:nth-child(4), .main-table td:nth-child(4) { 
+    width: 140px !important; 
+}
+
+/* 4. KOLOM AKSI: Dikunci sepadat mungkin untuk 6 tombol mini */
+.main-table th:last-child, 
+.main-table td:last-child { 
+    width: 265px !important; /* Ruang paling minimal untuk 6 tombol */
+}
+
+/* --- TOMBOL AKSI SUPER MINI (40px x 25px) --- */
+.action-group {
+    display: flex;
+    gap: 2px;
+    justify-content: flex-end; /* Merapat ke kanan agar PROGRAM lebih lega */
+}
+
+.btn-action-tbl {
+    width: 40px !important; 
+    height: 25px !important;
+    border-radius: 4px;
+    font-size: 7px;
+    font-weight: 900;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* ... efek neumorphic tetap ada ... */
+    background: #f0f4f8;
+    color: var(--accent-blue);
+    box-shadow: 2px 2px 4px #d1d9e6, -1px -1px 3px #ffffff;
+    border: 1px solid rgba(255,255,255,0.8);
+    cursor: pointer;
+}
+/* Warna khusus untuk tombol SUB agar berbeda dengan Hapus */
+.btn-sub-color:hover {
+    color: #3498db !important;
+    border-color: #3498db !important;
+}
+/* Tambahan: Pastikan teks program bisa membungkus jika masih sangat panjang */
+.text-detail {
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--accent-blue);
+    word-break: break-word; /* Agar teks panjang tidak 'meledak' keluar */
+}
+/* --- PENYETARAAN VALUE DISPLAY (PAGU & CAPAIAN) --- */
+/* --- PENYETARAAN VALUE DISPLAY (VERSI RAMPING) --- */
+.value-display {
+    width: 100%;
+    /* Perkecil min-width agar tidak mendorong kolom lain */
+    min-width: 120px; 
+    height: 35px; /* Lebih pendek dari sebelumnya */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fb;
+    border-radius: 10px;
+    font-weight: 800;
+    color: var(--accent-blue);
+    box-shadow: inset 2px 2px 5px #d1d9e6, inset -2px -2px 5px #ffffff;
+    /* Font diperkecil agar angka Rp tidak keluar kotak */
+    font-size: 11px; 
+    border: 1px solid rgba(255,255,255,0.5);
+    padding: 0 5px;
+    white-space: nowrap; /* Mencegah angka turun ke baris baru */
+    overflow: hidden;    /* Memastikan teks tetap di dalam */
+}
+
+/* Pastikan kolom Pagu & Capaian punya ruang yang cukup di tabel */
+.main-table th:nth-child(3), .main-table td:nth-child(3),
+.main-table th:nth-child(4), .main-table td:nth-child(4) { 
+    width: 140px !important; 
+}
+
+.gold-value {
+    color: var(--accent-gold) !important;
+}
+
+/* --- PENYETARAAN TOMBOL AKSI DI TABEL --- */
+.action-group {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.btn-action-tbl {
+    /* KUNCI: Ukuran sama besar untuk semua tombol aksi */
+    width: 85px; 
+    height: 45px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.8);
+    background: #f0f4f8;
+    color: var(--accent-blue);
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    box-shadow: 3px 3px 6px #d1d9e6, -3px -3px 6px #ffffff;
+    transition: all 0.2s ease;
+}
+
+.btn-action-tbl:hover {
+    transform: translateY(-3px);
+    box-shadow: 6px 6px 12px #c2ccdb, -6px -6px 12px #ffffff;
+    color: var(--accent-gold);
+    border-color: var(--accent-gold);
+}
+
+.btn-action-tbl:active {
+    transform: scale(0.92);
+    box-shadow: inset 3px 3px 6px #d1d9e6;
+}
+
+/* Warna khusus hapus agar tetap waspada */
+.btn-del-color:hover {
+    color: #e74c3c !important;
+    border-color: #e74c3c !important;
+}
+
+/* --- FUNGSI POP UP ---------------------------------------------------- */
+/* --- MODAL STYLING --- */
+/* --- PERBAIKAN TOTAL GAYA FORM MODAL --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px); /* Blur lebih halus */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: var(--bg-master) !important;
+    width: 400px !important;
+    padding: 35px !important;
+    border-radius: 30px !important;
+    box-shadow: 20px 20px 60px #d1d9e6, -20px -20px 60px #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.8) !important;
+}
+
+#modalTitle {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--accent-blue);
+    margin-bottom: 25px;
+    text-align: center;
+    letter-spacing: -0.5px;
+}
+
+/* Selector Khusus untuk Input yang dibuat via JS */
+#inputContainer .input-group {
+    margin-bottom: 20px;
+}
+
+#inputContainer label {
+    display: block !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    color: #8da2b5 !important;
+    margin-bottom: 8px !important;
+    margin-left: 10px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+}
+
+#inputContainer input {
+    width: 100% !important;
+    padding: 15px 20px !important;
+    border: none !important;
+    border-radius: 16px !important;
+    background: var(--bg-master) !important;
+    color: var(--accent-blue) !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    outline: none !important;
+    /* Efek Tenggelam (Inset) */
+    box-shadow: inset 6px 6px 12px #d1d9e6, 
+                inset -6px -6px 12px #ffffff !important;
+    transition: all 0.3s ease !important;
+}
+
+#inputContainer input:focus {
+    box-shadow: inset 2px 2px 5px #d1d9e6, 
+                inset -2px -2px 5px #ffffff !important;
+}
+
+/* Footer & Tombol */
+.modal-footer {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.btn-modal {
+    flex: 1;
+    height: 48px;
+    border-radius: 14px;
+    border: none;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 4px 4px 10px #d1d9e6, -4px -4px 10px #ffffff;
+    transition: all 0.2s ease;
+}
+
+.btn-modal:active {
+    transform: scale(0.96);
+    box-shadow: inset 2px 2px 5px #d1d9e6;
+}
+/* Tambahkan ini di style.css agar modal bisa muncul */
+.modal-overlay.active {
+    display: flex !important;
+}
+
+/* Styling Indentasi & Hierarki (Maks 3 Sub) */
+.level-0 { padding-left: 10px !important; font-size: 13px; font-weight: 800; }
+.level-1 { padding-left: 35px !important; font-size: 12px; opacity: 0.9; }
+.level-2 { padding-left: 60px !important; font-size: 11px; opacity: 0.8; }
+.level-3 { padding-left: 85px !important; font-size: 10px; opacity: 0.6; }
+
+/* Menghilangkan tombol SUB jika sudah mencapai level terendah (Level 3) */
+.limit-reached .btn-sub-color {
+    display: none !important;
+}
+/* Opsional: Beri tanda pada tombol yang fungsinya otomatis */
+.is-parent .btn-action-tbl:nth-child(2),
+.is-parent .btn-action-tbl:nth-child(3) {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* --- STYLING CUSTOM CONFIRMATION --- */
+.confirm-box {
+    max-width: 350px !important;
+    text-align: center;
+    padding: 30px !important;
+}
+
+.confirm-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.confirm-box h3 {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 18px;
+}
+
+.confirm-box p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* Warna tombol khusus untuk konfirmasi */
+#confirmOverlay .btn-save {
+    background: #f0f4f8;
+    color: #e74c3c; /* Warna merah untuk aksi krusial */
+}
+
+/* --- STYLING KOLOM VALUE (PAGU & ACV) --- */
+.main-table td .value-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Angka rata kanan agar rapi */
+    padding: 8px 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    box-shadow: inset 2px 2px 5px #d1d9e6, inset -2px -2px 5px #ffffff;
+    min-width: 140px;
+    transition: all 0.3s ease;
+}
+
+/* Warna khusus untuk Pagu (Hijau Lembut) */
+.pagu-style {
+    border-left: 4px solid #2ecc71;
+    color: #27ae60;
+    font-weight: 800;
+    font-family: 'Courier New', Courier, monospace; /* Gaya font angka akuntansi */
+}
+
+/* Warna khusus untuk Capaian (Emas/Gold) */
+.acv-style {
+    border-left: 4px solid #f1c40f;
+    color: #b8860b;
+    font-weight: 800;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* Efek hover agar interaktif */
+.value-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 10px #d1d9e6, -2px -2px 10px #ffffff;
+}
+
+/* Label kecil di dalam kolom (opsional) */
+.value-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 2px;
+    letter-spacing: 1px;
+}
+/* --- MINIMALIST NEUMORPHIC PILL --- */
+.value-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px; /* Bentuk Pill/Kapsul */
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    background: #f0f4f8;
+    
+    /* Efek Timbul (Soft Outset) */
+    box-shadow: 4px 4px 8px #d1d9e6, 
+               -3px -3px 8px #ffffff;
+    
+    transition: all 0.2s ease;
+    cursor: default;
+}
+
+/* Warna Minimalis Pagu (Soft Green) */
+.badge-pagu {
+    color: #27ae60;
+    border: 1px solid rgba(46, 204, 113, 0.1);
+}
+
+/* Warna Minimalis Capaian (Soft Gold) */
+.badge-acv {
+    color: #d4a017;
+    border: 1px solid rgba(241, 196, 15, 0.1);
+}
+
+/* Efek saat baris di-hover agar lebih 'timbul' */
+tr:hover .value-badge {
+    box-shadow: 2px 2px 4px #d1d9e6, 
+               -1px -1px 4px #ffffff;
+    transform: scale(0.98); /* Efek seperti ditekan sedikit */
+}
+/* --- MINIMALIST NEUMORPHIC BADGE --- */
+.value-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 50px; /* Bentuk Kapsul */
+    font-weight: 800;
+    font-size: 13px;
+    background: #f0f4f8; /* Warna sama dengan background agar menyatu */
+    
+    /* Efek Timbul Halus */
+    box-shadow: 4px 4px 8px #d1d9e6, 
+               -4px -4px 8px #ffffff;
+    
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    text-align: right;
+}
+
+/* Warna Teks Pagu (Soft Green) */
+.badge-pagu {
+    color: #27ae60;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Warna Teks Capaian (Premium Gold) */
+.badge-acv {
+    color: #d4a017;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Efek saat baris tabel di-hover */
+tr:hover .value-badge {
+    box-shadow: 2px 2px 5px #d1d9e6, 
+               -2px -2px 5px #ffffff;
+    transform: translateY(-1px);
+}
+/* --- PREMIUM MODAL STYLING --- */
+.modal-content {
+    border: none;
+    background: #f0f4f8;
+    box-shadow: 20px 20px 60px #d1d9e6, -20px -20px 60px #ffffff;
+    border-radius: 24px;
+    padding: 30px !important;
+}
+
+#modalTitle {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+}
+
+/* Input bergaya Inset (Tenggelam) */
+#inputContainer input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 12px;
+    background: #f0f4f8;
+    box-shadow: inset 6px 6px 12px #d1d9e6, inset -6px -6px 12px #ffffff;
+    color: #333;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+#inputContainer input:focus {
+    box-shadow: inset 2px 2px 5px #d1d9e6, inset -2px -2px 5px #ffffff;
+    color: #000;
+}
+
+/* Pewarnaan Dinamis Berdasarkan Tema */
+.modal-theme-pagu #modalTitle { color: #27ae60; }
+.modal-theme-pagu .btn-save { background: #27ae60 !important; box-shadow: 4px 4px 10px rgba(39, 174, 96, 0.3); }
+
+.modal-theme-acv #modalTitle { color: #d4a017; }
+.modal-theme-acv .btn-save { background: #d4a017 !important; box-shadow: 4px 4px 10px rgba(212, 160, 23, 0.3); }
+
+.modal-theme-info #modalTitle { color: #2980b9; }
+.modal-theme-info .btn-save { background: #2980b9 !important; box-shadow: 4px 4px 10px rgba(41, 128, 185, 0.3); }
+
+/* Tombol Simpan di Modal */
+.btn-modal.btn-save {
+    border-radius: 12px;
+    padding: 12px 25px;
+    font-weight: 700;
+    color: white;
+    border: none;
+    transition: transform 0.2s ease;
+}
+
+.btn-modal.btn-save:active {
+    transform: scale(0.95);
+}
+.modal-overlay {
+    z-index: 1000; /* Pastikan modal di paling atas */
+}
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.btn-modal {
+    padding: 12px 25px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+/* Tombol OK (Simpan) */
+.btn-save {
+    background: #f0f4f8;
+    color: #27ae60; /* Warna Hijau Sukses */
+    box-shadow: 4px 4px 10px #d1d9e6, -4px -4px 10px #ffffff;
+}
+
+.btn-save:hover {
+    box-shadow: 6px 6px 15px #c2ccdb, -4px -4px 12px #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Tombol Batal */
+.btn-cancel {
+    background: #f0f4f8;
+    color: #e74c3c; /* Warna Merah */
+    box-shadow: 4px 4px 10px #d1d9e6, -4px -4px 10px #ffffff;
+}
+
+.btn-modal:active {
+    box-shadow: inset 3px 3px 6px #d1d9e6, inset -3px -3px 6px #ffffff;
+    transform: scale(0.95);
+}
+/* --- GAYA FORM INPUT MINIMALIS & TIMBUL --- */
+#inputContainer div {
+    margin-bottom: 20px;
+}
+
+#inputContainer label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 8px;
+    margin-left: 5px;
+    letter-spacing: 1px;
+}
+
+#inputContainer input {
+    width: 100%;
+    padding: 14px 18px;
+    border: none;
+    border-radius: 15px; /* Lebih bulat agar minimalis */
+    background: #f0f4f8;
+    color: #333;
+    font-weight: 600;
+    font-size: 15px;
+    outline: none;
+    
+    /* Efek Inset (Tenggelam ke dalam) */
+    box-shadow: inset 5px 5px 10px #d1d9e6, 
+                inset -5px -5px 10px #ffffff;
+    
+    transition: all 0.3s ease;
+}
+
+#inputContainer input:focus {
+    /* Saat diklik, efek tenggelamnya makin tajam */
+    box-shadow: inset 2px 2px 5px #d1d9e6, 
+                inset -2px -2px 5px #ffffff;
+    background: #f5f8fb;
+}
+.modal-overlay {
+    transition: opacity 0.3s ease;
+}
+/* Pastikan selector ini ada di CSS Anda */
+#inputContainer .modal-input-premium {
+    display: block !important;
+    width: 100% !important;
+    padding: 15px !important;
+    margin-bottom: 10px !important;
+    border: none !important;
+    border-radius: 12px !important;
+    background: #f0f4f8 !important;
+    box-shadow: inset 5px 5px 10px #d1d9e6, inset -5px -5px 10px #ffffff !important;
+    color: #333 !important;
+    font-weight: 600 !important;
+}
+
+#inputContainer label {
+    font-size: 11px;
+    font-weight: 800;
+    color: #8da2b5;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+/* --- MONTH GRID SELECTOR --- */
+.month-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 Kolom */
+    gap: 15px;
+    padding: 10px 0;
+}
+
+.month-card {
+    padding: 15px 5px;
+    border-radius: 15px;
+    background: #f0f4f8;
+    color: var(--accent-blue);
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #ffffff;
+    border: 1px solid rgba(255,255,255,0.8);
+}
+
+.month-card:hover {
+    color: var(--accent-gold);
+    transform: translateY(-3px);
+    box-shadow: 6px 6px 12px #c2ccdb, -4px -4px 10px #ffffff;
+}
+
+/* Penanda Bulan yang Sedang Aktif */
+.month-card.active-month {
+    background: var(--accent-blue);
+    color: var(--accent-gold);
+    box-shadow: inset 4px 4px 8px rgba(0,0,0,0.2);
+    border: none;
+}
+
+.month-card:active {
+    transform: scale(0.95);
+    box-shadow: inset 2px 2px 5px #d1d9e6;
+}
+/* --- COPY MONTH TARGET GRID --- */
+.copy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.copy-card {
+    padding: 12px 5px;
+    border-radius: 12px;
+    background: #f0f4f8;
+    color: var(--accent-blue);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: 3px 3px 6px #d1d9e6, -3px -3px 6px #ffffff;
+    transition: all 0.2s ease;
+}
+
+/* Tandai bulan saat ini agar user tidak bingung (disabled) */
+.copy-card.current-source {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #e2e8f0;
+    box-shadow: none;
+}
+
+.copy-card:not(.current-source):hover {
+    background: var(--accent-blue);
+    color: white;
+    transform: scale(1.05);
+}
+
+.copy-info-text {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.highlight-month {
+    color: var(--accent-gold);
+    font-weight: 800;
+}
+/* --- TOAST NOTIFICATION SYSTEM --- */
+.toast-container {
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    padding: 15px 25px;
+    border-radius: 15px;
+    background: #f0f4f8;
+    color: var(--accent-blue);
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+    border-left: 5px solid var(--accent-gold);
+    animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Warna berdasarkan tipe */
+.toast.warning { border-left-color: #e67e22; color: #d35400; }
+.toast.info { border-left-color: #3498db; color: #2980b9; }
+.toast.success { border-left-color: #2ecc71; color: #27ae60; }
+
+/* Warna Merah (Bahaya/Over) */
+.status-red .dot { 
+    background: #e74c3c !important; 
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.8) !important; 
+}
+.status-red .status-text { color: #e74c3c !important; }
+
+/* Warna Kuning (Peringatan) */
+.status-yellow .dot { 
+    background: #f1c40f !important; 
+    box-shadow: 0 0 10px rgba(241, 196, 15, 0.8) !important; 
+}
+.status-yellow .status-text { color: #f39c12 !important; }
+
+/* Warna Hijau (Sempurna) */
+.status-green .dot { 
+    background: #2ecc71 !important; 
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.8) !important; 
+}
+.status-green .status-text { color: #2ecc71 !important; }
+
+/* Container pembungkus untuk input rupiah */
+.input-group {
+    position: relative;
+}
+
+/* Tambahan gaya jika Anda ingin label Rp muncul otomatis */
+.modal-theme-pagu input, .modal-theme-acv input {
+    padding-left: 45px !important; /* Beri ruang untuk teks Rp */
+}
+
+/* Gunakan pseudo-element atau div tambahan jika ingin visual Rp permanen */
+
+.main-table th {
+    position: sticky;
+    top: 0;
+    background: rgba(240, 243, 247, 0.8) !important;
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    border-bottom: 2px solid var(--accent-gold);
+}
+.main-table tbody tr:hover {
+    background: #ffffff !important;
+    transform: scale(1.01); /* Sedikit membesar */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    z-index: 5;
+    transition: all 0.2s ease;
+}
+/* Tambahkan di style.css */
+.sidebar-brand {
+    font-family: 'Inter', sans-serif;
+    font-size: 26px; /* Ukuran pas untuk satu baris */
+    font-weight: 900;
+    text-align: center;
+    padding: 25px 0;
+    letter-spacing: -1.5px; /* Efek modern rapat */
+    color: var(--accent-blue);
+    
+    /* Efek pahatan (Chiseled) */
+    text-shadow: 
+        1px 1px 0px #ffffff, 
+        2px 2px 0px rgba(209, 217, 230, 0.5);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+.sidebar-brand span {
+    color: var(--accent-gold);
+    background: #f0f4f8;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 22px;
+    margin-left: 5px;
+    
+    /* Membuat angka 2026 terlihat 'masuk' ke dalam kotak */
+    box-shadow: 
+        inset 2px 2px 5px #d1d9e6, 
+        inset -2px -2px 5px #ffffff;
+}
+/* --- NEUMORPHIC MODAL LOGOUT --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(240, 243, 247, 0.8);
+    backdrop-filter: blur(8px); /* Efek blur background */
+    display: none; /* Sembunyi secara default */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.modal-card {
+    width: 350px;
+    padding: 40px 30px;
+    background: var(--bg-master);
+    border-radius: 30px;
+    box-shadow: var(--shadow-outer);
+    text-align: center;
+    transform: scale(0.8);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.active { display: flex; }
+.modal-overlay.active .modal-card { transform: scale(1); }
+
+.modal-icon { font-size: 40px; margin-bottom: 15px; }
+
+.modal-card h2 {
+    font-size: 18px; color: var(--accent-blue);
+    font-weight: 800; text-transform: uppercase; margin-bottom: 10px;
+}
+
+.modal-card p {
+    font-size: 13px; color: #8e9aaf; line-height: 1.6; margin-bottom: 30px;
+}
+
+.modal-card p span { color: var(--accent-gold); font-weight: 700; }
+
+.modal-buttons { display: flex; gap: 15px; }
+
+.modal-buttons button {
+    flex: 1; padding: 12px; border: none; border-radius: 12px;
+    font-size: 12px; font-weight: 800; cursor: pointer; transition: 0.3s;
+}
+
+.btn-cancel {
+    background: var(--bg-master); color: var(--accent-blue);
+    box-shadow: var(--shadow-outer);
+}
+
+.btn-confirm {
+    background: var(--accent-blue); color: var(--accent-gold);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+}
+
+.modal-buttons button:hover { transform: translateY(-3px); }
+.btn-cancel:hover { box-shadow: var(--shadow-inner); }
