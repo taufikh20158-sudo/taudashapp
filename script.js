@@ -629,7 +629,11 @@ function closeLogoutModal() {
 }
 
 // Eksekusi Keluar
+// Di file JS utama Anda
 function confirmLogout() {
+    // HAPUS TIKET SAAT KELUAR
+    sessionStorage.clear(); 
+    
     document.body.style.opacity = "0";
     setTimeout(() => {
         window.location.href = "login.html";
