@@ -10,6 +10,9 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     const validPass = "hidayat";
 
     if (userIn === validUser && passIn === validPass) {
+        // MEMBERIKAN TIKET MASUK
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('userActive', userIn);
         // Efek transisi sukses
         document.querySelector('.login-card').style.transform = "scale(0.9)";
         document.querySelector('.login-card').style.opacity = "0";
