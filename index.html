@@ -1,5 +1,15 @@
 <!DOCTYPE html>
 <html lang="id">
+<script>
+ // SECURITY CHECK: Pasang di paling atas script index.html & das.html
+(function() {
+    const authorized = sessionStorage.getItem('isLoggedIn');
+    if (authorized !== 'true') {
+        // Jika tidak ada tiket, langsung tendang ke login
+        window.location.href = "login.html";
+    }
+})();
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
