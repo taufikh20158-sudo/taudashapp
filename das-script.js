@@ -1,3 +1,4 @@
+// --- FUNGSI AMBIL DATA BERDASARKAN BULAN (UNTUK KARTU) ---
 function muatData() {
     const key = 'premiumAppData_2026';
     const saved = localStorage.getItem(key) || localStorage.getItem('appData');
@@ -12,6 +13,8 @@ function muatData() {
         return [];
     }
 }
+
+// --- FUNGSI UTAMA RENDER DASHBOARD ---
 function renderExecutiveDashboard() {
     const listRed = document.getElementById('LIST_RED');
     const listYellow = document.getElementById('LIST_YELLOW');
@@ -19,42 +22,70 @@ function renderExecutiveDashboard() {
 
     if (!listRed) return;
 
-    // Reset isi kolom
-    listRed.innerHTML = ""; listYellow.innerHTML = ""; listGreen.innerHTML = "";
+    // 1. AMBIL DATA DARI LOCAL STORAGE
+    const key = 'premiumAppData_2026';
+    const saved = localStorage.getItem(key) || localStorage.getItem('appData');
+    
+    let tPaguTahun = 0;
+    let tAcvTahun = 0;
 
-    const dataBulanIni = muatData();
-    let tPagu = 0; let tAcv = 0;
+    if (saved) {
+        const allData = JSON.parse(saved);
+        // Hitung akumulasi 12 bulan untuk CON1
+        for (let bulan in allData) {
+            if (Array.isArray(allData[bulan])) {
+                allData[bulan].forEach(item => {
+                    if (item.level == 0) {
+                        tPaguTahun += (parseFloat(item.pagu) || 0);
+                        tAcvTahun += (parseFloat(item.acv) || parseFloat(item.realisasi) || 0);
+                    }
+                });
+            }
+        }
+    }
+
+    // Update Tampilan Atas (CON1)
+    updateTopStats(tPaguTahun, tAcvTahun);
+
+    // 2. RENDER KARTU KANBAN (CON3)
+    listRed.innerHTML = ""; listYellow.innerHTML = ""; listGreen.innerHTML = "";
+    const dataBulanIni = muatData(); 
 
     dataBulanIni.forEach((item) => {
-        // --- FUNGSI PEMBERSIH ANGKA TOTAL ---
-        const toNum = (v) => {
-            if (!v) return 0;
-            if (typeof v === 'number') return v;
-            // Hapus titik, hapus spasi, hapus Rp, ganti koma ke titik
-            let clean = v.toString().replace(/Rp/g, '').replace(/\./g, '').replace(/,/g, '.').trim();
-            return parseFloat(clean) || 0;
-        };
+        if (!item.program && !item.nama) return;
 
-        const pagu = toNum(item.pagu);
-        const acv = toNum(item.acv) || toNum(item.realisasi);
-        const nama = item.program || item.nama || "Tanpa Nama";
-        const level = item.level ?? 0;
+        // Logika Level Terendah: Skip jika item ini punya anak
+        const punyaAnak = dataBulanIni.some(child => String(child.parentId) === String(item.id));
+        if (punyaAnak) return;
 
-        // Hitung Persentase
-        const pct = pagu > 0 ? (acv / pagu) * 100 : 0;
-        
-        // Akumulasi Statistik Atas (Level 0)
-        if (level === 0) {
-            tPagu += pagu; 
-            tAcv += acv;
+        // Cari Nama Parent (Program Utama)
+        let namaParent = "PROGRAM";
+        if (item.parentId) {
+            let pRow = dataBulanIni.find(p => String(p.id) === String(item.parentId));
+            if (pRow) {
+                // Jika parent bukan level 0, cari kakeknya (level 0)
+                if (pRow.level != 0 && pRow.parentId) {
+                    let root = dataBulanIni.find(r => String(r.id) === String(pRow.parentId));
+                    namaParent = root ? root.program : pRow.program;
+                } else {
+                    namaParent = pRow.program;
+                }
+            }
+        } else {
+            namaParent = "MANDIRI";
         }
 
-        // --- RENDER KARTU (TANPA FILTER IF PAGU > 0) ---
-        // Kita keluarkan semua data agar tidak ada yang hilang
+        const pagu = parseFloat(item.pagu) || 0;
+        const acv = parseFloat(item.acv) || parseFloat(item.realisasi) || 0;
+        const pct = pagu > 0 ? (acv / pagu) * 100 : 0;
+
         const cardHTML = `
-            <div class="k-card" style="border-left: 5px solid ${pct < 95 ? '#e74c3c' : pct < 100 ? '#f39c12' : '#27ae60'}">
+            <div class="k-card" style="border-left: 5px solid ${pct < 95 ? '#e74c3c' : pct < 100 ? '#f39c12' : '#27ae60'}; margin-bottom:15px;">
                 <div class="k-info">
-                    <span class="k-name">${nama}</span>
+                    <div style="font-size: 8px; font-weight: 800; color: #8da2b5; text-transform: uppercase; margin-bottom: 4px;">
+                        📂 ${namaParent}
+                    </div>
+                    <span class="k-name" style="font-size: 13px; font-weight: 700;">${item.program || item.nama}</span>
                     <div style="font-size: 10px; color: #8e9aaf; margin-top:5px;">
                         Pagu: Rp ${pagu.toLocaleString('id-ID')}
                     </div>
@@ -68,28 +99,21 @@ function renderExecutiveDashboard() {
             </div>
         `;
 
-        // Masukkan ke kolom berdasarkan persentase
-        if (pct < 95) {
-            listRed.innerHTML += cardHTML;
-        } else if (pct < 100) {
-            listYellow.innerHTML += cardHTML;
-        } else {
-            listGreen.innerHTML += cardHTML;
-        }
+        if (pct < 95) listRed.innerHTML += cardHTML;
+        else if (pct < 100) listYellow.innerHTML += cardHTML;
+        else listGreen.innerHTML += cardHTML;
     });
-
-    updateTopStats(tPagu, tAcv);
 }
-//------------------------------
+
+// --- FUNGSI UPDATE STATISTIK TAHUNAN ---
 function updateTopStats(p, a) {
     const pct = p > 0 ? (a / p) * 100 : 0;
-    const fmt = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 });
+    const fmt = (v) => "Rp " + Math.floor(v).toLocaleString('id-ID');
 
-    if (document.getElementById('VIEW_PAGU_TOTAL')) document.getElementById('VIEW_PAGU_TOTAL').innerText = fmt.format(p);
-    if (document.getElementById('VIEW_ACV_TOTAL')) document.getElementById('VIEW_ACV_TOTAL').innerText = fmt.format(a);
+    if (document.getElementById('VIEW_PAGU_TOTAL')) document.getElementById('VIEW_PAGU_TOTAL').innerText = fmt(p);
+    if (document.getElementById('VIEW_ACV_TOTAL')) document.getElementById('VIEW_ACV_TOTAL').innerText = fmt(a);
     if (document.getElementById('VIEW_PCT_TOTAL')) document.getElementById('VIEW_PCT_TOTAL').innerText = pct.toFixed(2) + "%";
 }
 
-// Jalankan fungsi
+// --- JALANKAN SAAT START ---
 document.addEventListener('DOMContentLoaded', renderExecutiveDashboard);
-window.onload = renderExecutiveDashboard; // Jalankan lagi saat semua aset siap
