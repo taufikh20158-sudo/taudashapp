@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-     <script>
+    <script>
         // Cek secara instan sebelum halaman sempat dirender
         if (localStorage.getItem('isLoggedIn_2026') !== 'true') {
             window.location.replace("login.html");
@@ -193,5 +193,16 @@
         </main>
     </div>
     <script src="board-script.js"></script>
+     <div id="LOGOUT_MODAL" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-icon">!</div>
+            <h3>Konfirmasi Keluar</h3>
+            <p>Apakah Anda yakin ingin mengakhiri sesi ini dan keluar dari sistem SIMALU?</p>
+            <div class="modal-actions">
+                <button onclick="closeLogoutModal()" class="btn-cancel">BATAL</button>
+                <button onclick="confirmLogout()" class="btn-confirm">YA, KELUAR</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
