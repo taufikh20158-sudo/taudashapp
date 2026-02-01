@@ -337,15 +337,16 @@ function updateDashboard() {
 let hiddenParents = [];
 
 function toggleSubRows(parentId) {
-    const index = hiddenParents.indexOf(parentId);
-    if (index > -1) {
-        hiddenParents.splice(index, 1); // Munculkan
+    const sId = String(parentId);
+    const idx = hiddenParents.indexOf(sId);
+    
+    if (idx > -1) {
+        hiddenParents.splice(idx, 1); // Membuka (hapus dari list hide)
     } else {
-        hiddenParents.push(parentId); // Sembunyikan
+        hiddenParents.push(sId); // Menutup (masukkan ke list hide)
     }
-    renderTable(); // Gambar ulang tabel
+    renderTable(); 
 }
-
 function renderTable() {
     calculateHierarchy(); 
     const tableBody = document.querySelector('.main-table tbody');
@@ -354,23 +355,58 @@ function renderTable() {
 
     const dataBulanIni = appData[currentMonth] || [];
 
+    // --- LOGIKA AUTO-HIDE AWAL ---
+    // Jika hiddenParents kosong (awal load), masukkan semua ID yang punya level > 0
+    if (hiddenParents.length === 0) {
+        dataBulanIni.forEach(item => {
+            const isParent = dataBulanIni.some(child => String(child.parentId) === String(item.id));
+            if (isParent) {
+                hiddenParents.push(String(item.id));
+            }
+        });
+    }
+
     dataBulanIni.forEach((data, index) => {
+        // --- LOGIKA FILTER: HANYA TAMPILKAN JIKA INDUKNYA TIDAK DI-HIDE ---
         let isHidden = false;
         let pId = data.parentId;
+        
         while (pId) {
-            if (hiddenParents.includes(pId)) { isHidden = true; break; }
+            if (hiddenParents.includes(String(pId))) { 
+                isHidden = true; 
+                break; 
+            }
             const parentNode = dataBulanIni.find(i => String(i.id) === String(pId));
             pId = parentNode ? parentNode.parentId : null;
         }
+
+        // Jika dia adalah sub-baris dan induknya tertutup, jangan dirender
         if (isHidden) return; 
+
+        // Cek apakah baris ini punya anak (untuk fungsi klik)
+        const isParent = dataBulanIni.some(child => String(child.parentId) === String(data.id));
+        const isCollapsed = hiddenParents.includes(String(data.id));
 
         const tr = document.createElement('tr');
         const lvl = data.level || 0;
+        
+        // --- STRUKTUR BARIS ---
         tr.innerHTML = `
-            <td class="level-${lvl}">${data.kode}</td>
-            <td class="level-${lvl}"><div class="text-detail">${data.program}</div></td>
+            <td class="level-${lvl}" 
+                onclick="${isParent ? `toggleSubRows('${data.id}')` : ''}" 
+                style="${isParent ? 'cursor:pointer; font-weight:800; color:#d4af37;' : ''}">
+                ${data.kode}
+            </td>
+            
+            <td class="level-${lvl}">
+                <div class="text-detail" style="${lvl === 0 ? 'font-weight:800; color:#2c3e50; text-transform:uppercase;' : ''}">
+                    ${data.program}
+                </div>
+            </td>
+            
             <td style="text-align: center;"><div class="value-badge badge-pagu">${Number(data.pagu).toLocaleString('id-ID')}</div></td>
             <td style="text-align: center;"><div class="value-badge badge-acv">${Number(data.acv).toLocaleString('id-ID')}</div></td>
+            
             <td>
                 <div class="action-group">
                     <button class="btn-action-tbl" onclick="editProgram(${index})">⚙️</button>
@@ -383,11 +419,6 @@ function renderTable() {
             </td>`;
         tableBody.appendChild(tr);
     });
-
-    // Panggil dashboard otomatis
-    if (typeof renderExecutiveMonitoring === 'function') {
-        renderExecutiveMonitoring();
-    }
 }
 // ==========================================
 // 4. HELPER & MODAL
