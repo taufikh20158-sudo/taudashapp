@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function() {
+            // Cek apakah ada status login di localStorage
+            const isLoggedIn = localStorage.getItem('isLoggedIn_2026');
+            
+            if (isLoggedIn !== 'true') {
+                // Jika tidak ada, paksa pindah ke login
+                alert("Akses Ditolak! Silakan login terlebih dahulu.");
+                window.location.href = "login.html";
+            }
+        })();
+    </script>
+    <title>Sistem Manajemen Luarbiasa</title>
+    <link rel="stylesheet" href="input-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&family=Inter:wght@900&display=swap" rel="stylesheet">
+</head>
+<body id="MASTERMAIN">
+
+    <aside id="CONSIDEBAR">
+        <nav class="sidebar-menu">
+            <a href="board.html" class="menu-item">
+                <span class="menu-text">DASHBOARD</span>
+            </a>
+            <a href="index.html" class="menu-item">
+                <span class="menu-text">RPD</span>
+            </a>
+            <a href="input.html" class="menu-item active">
+                <span class="menu-text">INPUT</span>
+            </a>
+            <a href="das.html" class="menu-item">
+                <span class="menu-text">LAPORAN</span>
+            </a>
+            <div class="menu-item" onclick="logoutSession()">
+                <span class="menu-text">KELUAR</span>
+            </div>
+        </nav>
+    </aside>
+
+    <main id="MAIN_CONTENT_AREA">
+        <div id="CON1">
+            <div class="input-selection-container">
+                <button class="btn-input-main">
+                    <span class="btn-icon">💰</span>
+                    <span class="btn-text">INPUT ALOKASI PAGU</span>
+                </button>
+
+                <div class="dropdown-wrapper">
+                    <button class="btn-input-main dropdown-trigger" onclick="toggleDropdown()">
+                        <span class="btn-icon">📝</span>
+                        <span class="btn-text">INPUT RENCANA KERJA</span>
+                        <span class="arrow-drop">❯</span>
+                    </button> 
+                    <div id="DROPDOWN_LIST" class="dropdown-content">
+                        <button class="drop-item" onclick="openForm('TU')">1. TATA USAHA ( TU )</button>
+                        <button class="drop-item" onclick="openForm('MONTIB')">2. MONITORING DAN PENERTIBAN ( MONTIB )</button>
+                        <button class="drop-item" onclick="openForm('SARPEL')">3. SARANA PELAYANAN ( SARPEL )</button>
+                        <button class="drop-item" onclick="openForm('NONNAME1')">4. NONNAME1</button>
+                        <button class="drop-item" onclick="openForm('NONNAME2')">5. NONNAME2</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div id="CON2">
+    <div id="FORM_MONTIB" class="form-wrapper-vertical" style="display: none;">
+        <div class="form-group">
+            <label class="input-label">JENIS KEGIATAN</label>
+            <select id="sel_kegiatan" class="input-neumorph-select" onchange="updateSubKegiatan()">
+                <option value="">-- PILIH --</option>
+                <option value="monitoring">MONITORING</option>
+                <option value="penertiban">PENERTIBAN</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="input-label">LOKASI KEGIATAN</label>
+            <select id="sel_sub_kegiatan" class="input-neumorph-select" onchange="updateKode()">
+                <option value="">-- PILIH --</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="input-label">KODE AKUN</label>
+            <select id="sel_kode" class="input-neumorph-select" onchange="showKeterangan()">
+                <option value="">-- PILIH --</option>
+            </select>
+        </div>
+
+        <div id="kode_info" class="keterangan-box-mini">Detail kode akan muncul di sini...</div>
+
+        <button class="btn-save-full">SIMPAN DATA</button>
+    </div>
+</div>
+        </div>
+    </main>
+    <script>
+        function logoutSession() {
+            if(confirm("Apakah Anda yakin ingin keluar?")) {
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+    <script>
+        function showRencanaKerja() {
+            document.getElementById('MAIN_SELECTION').style.display = 'none';
+            document.getElementById('LIST_RENCANA_KERJA').style.display = 'flex';
+        }
+
+        function backToMain() {
+            document.getElementById('LIST_RENCANA_KERJA').style.display = 'none';
+            document.getElementById('MAIN_SELECTION').style.display = 'flex';
+        }
+
+        // Fungsi logout yang tadi juga bisa diletakkan di sini
+        function logoutSession() {
+            if(confirm("Apakah Anda yakin ingin keluar?")) {
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+    <script src="input-script.js"></script>
+</body>      
+</html>
+</body>      
+</html>
