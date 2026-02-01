@@ -557,3 +557,63 @@ canvas {
     color: var(--accent-blue);
     cursor: pointer;
 }
+/* --- NEUMORPHIC MODAL LOGOUT --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(240, 243, 247, 0.8);
+    backdrop-filter: blur(8px); /* Efek blur background */
+    display: none; /* Sembunyi secara default */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.modal-card {
+    width: 350px;
+    padding: 40px 30px;
+    background: var(--bg-master);
+    border-radius: 30px;
+    box-shadow: var(--shadow-outer);
+    text-align: center;
+    transform: scale(0.8);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.active { display: flex; }
+.modal-overlay.active .modal-card { transform: scale(1); }
+
+.modal-icon { font-size: 40px; margin-bottom: 15px; }
+
+.modal-card h2 {
+    font-size: 18px; color: var(--accent-blue);
+    font-weight: 800; text-transform: uppercase; margin-bottom: 10px;
+}
+
+.modal-card p {
+    font-size: 13px; color: #8e9aaf; line-height: 1.6; margin-bottom: 30px;
+}
+
+.modal-card p span { color: var(--accent-gold); font-weight: 700; }
+
+.modal-buttons { display: flex; gap: 15px; }
+
+.modal-buttons button {
+    flex: 1; padding: 12px; border: none; border-radius: 12px;
+    font-size: 12px; font-weight: 800; cursor: pointer; transition: 0.3s;
+}
+
+.btn-cancel {
+    background: var(--bg-master); color: var(--accent-blue);
+    box-shadow: var(--shadow-outer);
+}
+
+.btn-confirm {
+    background: var(--accent-blue); color: var(--accent-gold);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+}
+
+.modal-buttons button:hover { transform: translateY(-3px); }
+.btn-cancel:hover { box-shadow: var(--shadow-inner); }
+
