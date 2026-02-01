@@ -250,9 +250,3 @@ function renderMonthlyTrend(appData) {
         options: { responsive: true, maintainAspectRatio: false }
     });
 }
-
-function logoutSession() {
-    if (confirm("Apakah Anda yakin ingin keluar?")) {
-        window.location.href = "login.html";
-    }
-}
