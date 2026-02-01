@@ -1,65 +1,73 @@
 <!DOCTYPE html>
 <html lang="id">
-<script>
- // SECURITY CHECK: Pasang di paling atas script index.html & das.html
-(function() {
-    const authorized = sessionStorage.getItem('isLoggedIn');
-    if (authorized !== 'true') {
-        // Jika tidak ada tiket, langsung tendang ke login
-        window.location.href = "login.html";
-    }
-})();
-</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desktop App - Vertical Stack</title>
+    <script>
+        (function() {
+            // Cek apakah ada status login di localStorage
+            const isLoggedIn = localStorage.getItem('isLoggedIn_2026');
+            
+            if (isLoggedIn !== 'true') {
+                // Jika tidak ada, paksa pindah ke login
+                alert("Akses Ditolak! Silakan login terlebih dahulu.");
+                window.location.href = "login.html";
+            }
+        })();
+    </script>
+    <title>Sistem Manajemen Luarbiasa</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="toastContainer" class="toast-container"></div>
-   <div id="MASTERMAIN">
-        <aside id="CONSIDEBAR">
-        <nav class="sidebar-menu">
-            <div class="menu-item active">
-                <span class="menu-icon">🏠</span>
-                <span class="menu-text">Utama</span>
-            </div>
-            <a href="das.html" class="menu-item">
-                <span class="menu-icon">📊</span>
-                <span class="menu-text">Monitoring</span>
-            </a>
-        <div class="menu-item" onclick="logoutSession()">
-            <span class="menu-icon">🚪</span>
-            <span class="menu-text">Keluar</span>
-        </div>
-        </nav>
-    </aside>
-
+    <div id="MASTERMAIN">
+<!-- -------------------------------------CONSIDEBAR----------------------------------------->
+            <aside id="CONSIDEBAR">
+                    <nav class="sidebar-menu">
+                        <a href="board.html" class="menu-item">
+                            <span class="menu-text">DASHBOARD</span>
+                        </a>
+                        <div class="menu-item active">
+                            <span class="menu-text">RPD</span>
+                        </div>
+                         <a href="input.html" class="menu-item">
+                            <span class="menu-text">INPUT</span>
+                        </a>
+                         <a href="das.html" class="menu-item">
+                            <span class="menu-text">LAPORAN</span>
+                        </a>
+                        <div class="menu-item" onclick="logoutSession()">
+                            <span class="menu-text">KELUAR</span>
+                        </div>
+                    </nav>
+            </aside>
+<!-- -------------------------------------CONSIDEBAR END----------------------------------------->
     <main id="MAIN_CONTENT_AREA">
         <section id="CON1">
             <div class="das-container">
                 <div class="das-item">
                     <span class="das-title">Target</span>
-                    <span class="das-value">500M</span>
+                    <span class="das-value" id="VAL_TARGET">0</span>
                 </div>
+
                 <div class="das-item">
                     <span class="das-title">Capaian</span>
-                    <span class="das-value">425M</span>
+                    <span class="das-value" id="VAL_CAPAIAN">0</span>
                 </div>
+
                 <div class="das-item">
-                    <span class="das-title">Persen</span>
-                    <span class="das-value gold-text">85%</span>
-                </div>
-                    <div class="das-item">
-                    <div class="das-title">Status Capaian</div>
-                    <div class="indicator-box status-green"> <div class="dot"></div>
-                    <span class="status-text">Stabil</span>
+                    <div class="das-title" style="margin-bottom: 5px;">Sisa Pagu & Status</div>
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                        <span class="das-value red-text" id="SISA_PAGU_VAL" style="font-size: 1.1rem; line-height: 1;">Rp 0</span>
+                        
+                        <div class="indicator-box status-green" style="margin-top: 5px;"> 
+                            <div class="dot"></div>
+                            <span class="status-text">Stabil</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-
         <section id="CON2">
             <div class="menu-bar-horizontal">
                 <div class="group-left">
@@ -149,8 +157,8 @@
         <h3 id="confirmTitle">Konfirmasi</h3>
         <p id="confirmMessage">Apakah Anda yakin ingin melanjutkan tindakan ini?</p>
         <div class="modal-footer">
-            <button class="btn-modal btn-cancel" onclick="closeConfirm()">Batal</button>
-            <button id="btnExecute" class="btn-modal btn-save">Ya, Lanjutkan</button>
+            <button class="btn-modal btn-cancel" onclick="closeConfirm()">BATAL</button>
+            <button id="btnExecute" class="btn-modal btn-save">LANJUTKAN</button>
         </div>
     </div>
 </div>
