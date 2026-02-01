@@ -9,7 +9,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
         // SIMPAN KUNCI DISINI
         localStorage.setItem('isLoggedIn_2026', 'true');
         
-        window.location.replace("index.html"); 
+        window.location.replace("board.html"); 
     } else {
         errorMsg.style.display = "block";
     }
