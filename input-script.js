@@ -64,9 +64,32 @@ function showKeterangan() {
 
     info.innerText = dataKeterangan[val] || 'Pilih kode untuk melihat detail...';
 }
+/**
+ * FUNGSI LOGOUT GLOBAL
+ */
+// 1. Fungsi saat tombol KELUAR di klik
 function logoutSession() {
-    const modal = document.getElementById('logoutModal');
+    const modal = document.getElementById('LOGOUT_MODAL');
     modal.classList.add('active');
 }
-// Update tombol di HTML untuk memanggil fungsi ini:
-// Contoh: <button class="drop-item" onclick="openForm('TATA USAHA')">1. TATA USAHA ( TU )</button>
+
+// 2. Fungsi saat klik BATAL
+function closeLogoutModal() {
+    const modal = document.getElementById('LOGOUT_MODAL');
+    modal.classList.remove('active');
+}
+
+// 3. Fungsi saat klik YA, KELUAR
+function confirmLogout() {
+    // Hapus Kunci Akses
+    localStorage.removeItem('isLoggedIn_2026');
+    
+    // Animasi Keluar
+    document.querySelector('.modal-card').style.transform = "scale(0.9)";
+    document.body.style.opacity = "0";
+    document.body.style.transition = "opacity 0.5s ease";
+
+    setTimeout(() => {
+        window.location.replace("login.html");
+    }, 500);
+}
