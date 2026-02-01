@@ -3,18 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script>
-        (function() {
-            // Cek apakah ada status login di localStorage
-            const isLoggedIn = localStorage.getItem('isLoggedIn_2026');
-            
-            if (isLoggedIn !== 'true') {
-                // Jika tidak ada, paksa pindah ke login
-                alert("Akses Ditolak! Silakan login terlebih dahulu.");
-                window.location.href = "login.html";
-            }
-        })();
-    </script>
     <title>Sistem Manajemen Luarbiasa</title>
     <link rel="stylesheet" href="input-style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&family=Inter:wght@900&display=swap" rel="stylesheet">
