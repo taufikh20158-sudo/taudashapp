@@ -1094,66 +1094,6 @@ td[class^="level-"] {
     z-index: 5;
     transition: all 0.2s ease;
 }
-/* --- NEUMORPHIC MODAL LOGOUT --- */
-.modal-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(240, 243, 247, 0.8);
-    backdrop-filter: blur(8px); /* Efek blur background */
-    display: none; /* Sembunyi secara default */
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    transition: all 0.3s ease;
-}
-
-.modal-card {
-    width: 350px;
-    padding: 40px 30px;
-    background: var(--bg-master);
-    border-radius: 30px;
-    box-shadow: var(--shadow-outer);
-    text-align: center;
-    transform: scale(0.8);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.modal-overlay.active { display: flex; }
-.modal-overlay.active .modal-card { transform: scale(1); }
-
-.modal-icon { font-size: 40px; margin-bottom: 15px; }
-
-.modal-card h2 {
-    font-size: 18px; color: var(--accent-blue);
-    font-weight: 800; text-transform: uppercase; margin-bottom: 10px;
-}
-
-.modal-card p {
-    font-size: 13px; color: #8e9aaf; line-height: 1.6; margin-bottom: 30px;
-}
-
-.modal-card p span { color: var(--accent-gold); font-weight: 700; }
-
-.modal-buttons { display: flex; gap: 15px; }
-
-.modal-buttons button {
-    flex: 1; padding: 12px; border: none; border-radius: 12px;
-    font-size: 12px; font-weight: 800; cursor: pointer; transition: 0.3s;
-}
-
-.btn-cancel {
-    background: var(--bg-master); color: var(--accent-blue);
-    box-shadow: var(--shadow-outer);
-}
-
-.btn-confirm {
-    background: var(--accent-blue); color: var(--accent-gold);
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
-}
-
-.modal-buttons button:hover { transform: translateY(-3px); }
-.btn-cancel:hover { box-shadow: var(--shadow-inner); }
-
 /* --- PERBAIKAN TATA LETAK KARTU CON3 --- */
 
 /* Kontainer utama kartu */
@@ -1237,3 +1177,97 @@ td[class^="level-"] {
 tr.level-0-row {
     margin-top: 20px !important;
 }
+/*-------------------------------------LOGOUT----------------------------------
+/* Container Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(44, 62, 80, 0.7); /* Warna accent-blue dengan transparansi */
+    backdrop-filter: blur(5px);
+    display: none; /* Tersembunyi default */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Card Modal */
+.modal-card {
+    background: #f0f4f8;
+    padding: 30px;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 350px;
+    text-align: center;
+    box-shadow: 20px 20px 60px rgba(0,0,0,0.2);
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-overlay.active .modal-card {
+    transform: scale(1);
+}
+
+.modal-icon {
+    width: 60px;
+    height: 60px;
+    background: #f0f4f8;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 15px;
+    color: #d4af37; /* Accent Gold */
+    font-size: 30px;
+    font-weight: 800;
+    box-shadow: 5px 5px 15px #d1d9e6, -5px -5px 15px #ffffff;
+}
+
+.modal-card h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.modal-card p {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* Buttons */
+.modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-cancel, .btn-confirm {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 11px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-cancel {
+    background: #f0f4f8;
+    color: #2c3e50;
+    box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #ffffff;
+}
+
+.btn-confirm {
+    background: #e74c3c; /* Red */
+    color: white;
+    box-shadow: 4px 4px 10px rgba(231, 76, 60, 0.3);
+}
+
+.btn-confirm:hover { background: #c0392b; }
+.btn-cancel:hover { box-shadow: inset 2px 2px 5px #d1d9e6; }
