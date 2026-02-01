@@ -54,20 +54,127 @@ function saveToLocalStorage() {
     alert("💾 Berhasil! Data Januari - Desember telah disimpan.");
 }
 
+// function exportToPDF() {
+//     if (typeof html2pdf === 'undefined') {
+//         alert("Library PDF belum dimuat. Pastikan ada koneksi internet.");
+//         return;
+//     }
+//     const element = document.getElementById('CON3');
+//     const opt = {
+//         margin: 10,
+//         filename: `Laporan_${currentMonth}.pdf`,
+//         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+//     };
+//     html2pdf().set(opt).from(element).save();
+// }
 function exportToPDF() {
     if (typeof html2pdf === 'undefined') {
         alert("Library PDF belum dimuat. Pastikan ada koneksi internet.");
         return;
     }
-    const element = document.getElementById('CON3');
-    const opt = {
-        margin: 10,
-        filename: `Laporan_${currentMonth}.pdf`,
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-    };
-    html2pdf().set(opt).from(element).save();
-}
 
+    const date = new Date();
+    const listBulan = ["JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", 
+                       "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"];
+    const bulanSekarang = listBulan[date.getMonth()];
+    const tahunSekarang = date.getFullYear();
+
+    const originalElement = document.getElementById('CON3');
+    const tableClone = originalElement.cloneNode(true);
+
+    // Bersihkan elemen aksi (tombol dan kolom aksi)
+    const actions = tableClone.querySelectorAll('.action-btn, .btn-action, button, .action-col, th:last-child, td:last-child');
+    actions.forEach(el => el.remove());
+
+    const pdfWrapper = document.createElement('div');
+    pdfWrapper.style.width = "1000px"; 
+    pdfWrapper.style.padding = "20px";
+    pdfWrapper.style.backgroundColor = "#fff";
+
+    const headerHtml = `
+        <div style="text-align: center; margin-bottom: 25px; border-bottom: 3px solid #000; padding-bottom: 10px;">
+            <h1 style="margin: 0; font-size: 20px; font-weight: 900; color: #000; text-transform: uppercase;">
+                REALISASI RPD BULAN ${bulanSekarang} TAHUN ${tahunSekarang}
+            </h1>
+        </div>
+    `;
+
+    const footerHtml = `
+        <div style="margin-top: 40px; display: flex; justify-content: flex-end; page-break-inside: avoid;">
+            <div style="text-align: center; width: 300px;">
+                <p style="font-size: 11px; margin-bottom: 1px;">
+                    PALANGKA RAYA, ${date.getDate()} ${bulanSekarang} ${tahunSekarang}
+                </p>
+                  <p style="font-size: 11px; margin-bottom: 110px;">
+                  Analis Anggaran Ahli Pertama</p>
+                <p style="font-size: 12px; font-weight: 800; text-decoration: underline; margin: 0; text-transform: uppercase;">
+                    Taufik Hidayat,s.ab
+                </p>
+                <p style="font-size: 11px; margin: 0;">NIP : 199604092025041002</p>
+            </div>
+        </div>
+    `;
+
+    pdfWrapper.innerHTML = headerHtml;
+    pdfWrapper.appendChild(tableClone);
+    pdfWrapper.innerHTML += footerHtml;
+
+    // --- STYLING HEADER KOLOM (RATA TENGAH) ---
+    const ths = pdfWrapper.querySelectorAll('th');
+    ths.forEach(th => {
+        th.style.backgroundColor = "#e5e5e5"; 
+        th.style.color = "#000";
+        th.style.fontWeight = "900"; 
+        th.style.textTransform = "uppercase"; 
+        th.style.textAlign = "center"; // JUDUL RATA TENGAH
+        th.style.verticalAlign = "middle";
+        th.style.padding = "12px 5px";
+        th.style.border = "1px solid #000";
+        th.style.fontSize = "10px";
+
+        // Pastikan teks judul seragam
+        let txt = th.innerText.toLowerCase();
+        if(txt.includes('kode')) th.innerText = 'KODE';
+        if(txt.includes('program')) th.innerText = 'PROGRAM / KEGIATAN';
+        if(txt.includes('pagu')) th.innerText = 'PAGU ANGGARAN';
+        if(txt.includes('capaian')) th.innerText = 'CAPAIAN';
+    });
+
+    // --- STYLING ISI DATA ---
+    const rows = pdfWrapper.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        row.style.pageBreakInside = "avoid";
+        const cells = row.cells;
+        // Skip header (index 0) agar tidak merusak rata tengah judul
+        if (index > 0 && cells.length >= 2) { 
+            cells[0].style.textAlign = "left";  // Data Kode tetap kiri
+            cells[0].style.whiteSpace = "nowrap"; 
+            cells[1].style.textAlign = "left";  // Data Program tetap kiri
+            
+            for(let i=2; i < cells.length; i++) {
+                cells[i].style.textAlign = "right"; // Data Angka tetap kanan
+            }
+        }
+    });
+
+    const allTds = pdfWrapper.querySelectorAll('td');
+    allTds.forEach(td => {
+        td.style.border = "1px solid #000";
+        td.style.padding = "6px 5px";
+        td.style.fontSize = "9px";
+    });
+
+    const opt = {
+        margin: [10, 10, 15, 10],
+        filename: `LAPORAN_RPD_${bulanSekarang}_${tahunSekarang}.pdf`,
+        html2canvas: { scale: 2.5, useCORS: true, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
+        pagebreak: { mode: 'css', avoid: 'tr' }
+    };
+
+    html2pdf().set(opt).from(pdfWrapper).save();
+}
+//---------------------------------DELETE--------------------------------
 function deleteAllWorksheet() {
     if (confirm(`Hapus SEMUA baris di bulan ${currentMonth}?`)) {
         appData[currentMonth] = [];
@@ -115,7 +222,7 @@ function copyCurrentMonth() {
                 appData[m] = JSON.parse(JSON.stringify(appData[currentMonth]));
                 
                 closeModal();
-                showToast(`Sukses! Data ${currentMonth} disalin ke ${m}`, "success");
+                // showToast(`Sukses! Data ${currentMonth} disalin ke ${m}`, "success");
                 
                 // Kembalikan display tombol simpan
                 btnConfirm.style.display = 'block';
@@ -143,21 +250,34 @@ function addMainRow() {
 
 function addSubRow(index) {
     const parent = appData[currentMonth][index];
-    if (parent.level >= 3) return alert("Maksimal 3 Sub!");
+    // Izinkan sampai level 4
+    if (parent.level >= 4) {
+        // showToast("Batas Maksimal! Hanya diijinkan hingga Sub-Baris Level 4.", "warning");
+        return;
+    }
     appData[currentMonth].splice(index + 1, 0, {
-        id: "ID-" + Date.now(), kode: "Sub", program: "Nama Kegiatan",
-        pagu: 0, acv: 0, level: parent.level + 1, parentId: parent.id
+        id: "ID-" + Date.now(), 
+        kode: "Sub", 
+        program: "Nama Kegiatan",
+        pagu: 0, 
+        acv: 0, 
+        level: parent.level + 1, 
+        parentId: parent.id
     });
     renderTable();
+    // showToast("Sub-baris level " + (parent.level + 1) + " ditambahkan", "success");
 }
-
 function calculateHierarchy() {
     let data = appData[currentMonth];
+    
+    // 1. Reset Induk
     data.forEach(item => {
         const hasChildren = data.some(child => child.parentId === item.id);
         if (hasChildren) { item.pagu = 0; item.acv = 0; }
     });
-    for (let l = 3; l > 0; l--) {
+
+    // 2. Akumulasi dari terdalam (4) ke Utama (0)
+    for (let l = 4; l > 0; l--) {
         data.forEach(item => {
             if (item.level === l) {
                 const parent = data.find(p => p.id === item.parentId);
@@ -169,36 +289,88 @@ function calculateHierarchy() {
         });
     }
     updateDashboard();
+    localStorage.setItem('premiumAppData_2026', JSON.stringify(appData));
+}
+
+function updateDashboard() {
+    const data = appData[currentMonth];
+    const main = data.filter(i => i.level === 0);
+    let p = 0, a = 0;
+    main.forEach(r => { p += (Number(r.pagu) || 0); a += (Number(r.acv) || 0); });
+
+    const sisa = p - a;
+    const persentase = p > 0 ? (a / p) * 100 : 0;
+
+    // PERBAIKAN: Gunakan ID agar tidak tertukar/tumpang tindih
+    const elTarget = document.getElementById('VAL_TARGET');
+    const elCapaian = document.getElementById('VAL_CAPAIAN');
+    const elPersen = document.getElementById('VAL_PERSEN');
+    const elSisa = document.getElementById('SISA_PAGU_VAL');
+
+    if (elTarget) elTarget.innerText = "Rp " + p.toLocaleString('id-ID');
+    if (elCapaian) elCapaian.innerText = "Rp " + a.toLocaleString('id-ID');
+    if (elPersen) elPersen.innerText = persentase.toFixed(1) + "%";
+    
+    if (elSisa) {
+        elSisa.innerText = "Rp " + sisa.toLocaleString('id-ID');
+        elSisa.style.color = sisa < 0 ? "#ff4d4d" : "#ffd700";
+    }
+
+    // Indikator Status
+    const indicatorBox = document.querySelector('.indicator-box');
+    const statusText = document.querySelector('.status-text');
+    if (indicatorBox && statusText) {
+        indicatorBox.classList.remove('status-red', 'status-yellow', 'status-green');
+        if (persentase >= 100) {
+            indicatorBox.classList.add('status-green');
+            statusText.innerText = "Tercapai";
+        } else if (persentase >= 50) {
+            indicatorBox.classList.add('status-yellow');
+            statusText.innerText = "Mendekati";
+        } else {
+            indicatorBox.classList.add('status-red');
+            statusText.innerText = "Kurang";
+        }
+    }
+}
+// Global State untuk menyimpan baris mana yang sedang di-hide
+let hiddenParents = [];
+
+function toggleSubRows(parentId) {
+    const index = hiddenParents.indexOf(parentId);
+    if (index > -1) {
+        hiddenParents.splice(index, 1); // Munculkan
+    } else {
+        hiddenParents.push(parentId); // Sembunyikan
+    }
+    renderTable(); // Gambar ulang tabel
 }
 
 function renderTable() {
-    calculateHierarchy();
+    calculateHierarchy(); 
     const tableBody = document.querySelector('.main-table tbody');
     if (!tableBody) return;
     tableBody.innerHTML = '';
 
-    appData[currentMonth].forEach((data, index) => {
+    const dataBulanIni = appData[currentMonth] || [];
+
+    dataBulanIni.forEach((data, index) => {
+        let isHidden = false;
+        let pId = data.parentId;
+        while (pId) {
+            if (hiddenParents.includes(pId)) { isHidden = true; break; }
+            const parentNode = dataBulanIni.find(i => String(i.id) === String(pId));
+            pId = parentNode ? parentNode.parentId : null;
+        }
+        if (isHidden) return; 
+
         const tr = document.createElement('tr');
         const lvl = data.level || 0;
-     
-        
-        // Render Baris dengan struktur Badge Timbul & Tombol yang Aktif
         tr.innerHTML = `
-            <td class="level-${lvl}">${lvl > 0 ? '↳ ' : ''}${data.kode}</td>
+            <td class="level-${lvl}">${data.kode}</td>
             <td class="level-${lvl}"><div class="text-detail">${data.program}</div></td>
-            
-            <td style="text-align: center;">
-                <div class="value-badge badge-pagu">
-                    ${Number(data.pagu).toLocaleString('id-ID')}
-                </div>
-            </td>
-            
-            <td style="text-align: center;">
-                <div class="value-badge badge-acv">
-                    ${Number(data.acv).toLocaleString('id-ID')}
-                </div>
-            </td>
-            
+            <td style="text-align: center;"><div class="value-badge badge-pagu">${Number(data.pagu).toLocaleString('id-ID')}</div></td>
+            <td style="text-align: center;"><div class="value-badge badge-acv">${Number(data.acv).toLocaleString('id-ID')}</div></td>
             <td>
                 <div class="action-group">
                     <button class="btn-action-tbl" onclick="editProgram(${index})">⚙️</button>
@@ -208,11 +380,14 @@ function renderTable() {
                     <button class="btn-action-tbl btn-del-color" onclick="deleteRow(${index})">🗑️</button>
                     <button class="btn-action-tbl btn-sub-color" onclick="addSubRow(${index})">➕</button>
                 </div>
-            </td>
-        `;
+            </td>`;
         tableBody.appendChild(tr);
     });
-    localStorage.setItem('appData', JSON.stringify(appData));
+
+    // Panggil dashboard otomatis
+    if (typeof renderExecutiveMonitoring === 'function') {
+        renderExecutiveMonitoring();
+    }
 }
 // ==========================================
 // 4. HELPER & MODAL
@@ -225,51 +400,57 @@ function deleteRow(index) {
 }
 
 function moveRow(index) {
-    const data = appData[currentMonth];
-    if (index > 0 && data[index].level === data[index-1].level && data[index].parentId === data[index-1].parentId) {
-        [data[index], data[index-1]] = [data[index-1], data[index]];
-        renderTable();
-    }
-}
+    const dataBulanIni = appData[currentMonth];
+    if (index <= 0) return; // Sudah di paling atas
 
-function updateDashboard() {
-    const main = appData[currentMonth].filter(i => i.level === 0);
-    let p = 0, a = 0;
-    main.forEach(r => { p += r.pagu; a += r.acv; });
+    const currentRow = dataBulanIni[index];
+    const currentLevel = currentRow.level;
 
-    const vals = document.querySelectorAll('.das-value');
-    if(vals.length >= 3) {
-        vals[0].innerText = "Rp " + p.toLocaleString('id-ID');
-        vals[1].innerText = "Rp " + a.toLocaleString('id-ID');
-        
-        const persentase = p > 0 ? (a / p) * 100 : 0;
-        vals[2].innerText = persentase.toFixed(1) + "%";
-
-        // LOGIKA INDIKATOR DAS4
-        const indicatorBox = document.querySelector('.indicator-box');
-        const statusText = document.querySelector('.status-text');
-        
-        if (indicatorBox && statusText) {
-            // Reset Class
-            indicatorBox.classList.remove('status-red', 'status-yellow', 'status-green');
-
-            if (persentase === 100) {
-                // 100% = Hijau
-                indicatorBox.classList.add('status-green');
-                statusText.innerText = "Sempurna (100%)";
-            } 
-            else if ((persentase >= 96 && persentase <= 99) || (persentase >= 101 && persentase <= 104)) {
-                // 96-99% & 101-104% = Kuning
-                indicatorBox.classList.add('status-yellow');
-                statusText.innerText = "Mendekati Target";
-            } 
-            else {
-                // 0-95% & 105% ke atas = Merah
-                indicatorBox.classList.add('status-red');
-                statusText.innerText = persentase > 104 ? "Melebihi Kapasitas" : "Dibawah Target";
-            }
+    // 1. Identifikasi anggota "keluarga" (semua sub-baris di bawah baris ini)
+    let familyIndices = [index];
+    for (let i = index + 1; i < dataBulanIni.length; i++) {
+        // Jika level baris berikutnya lebih besar, berarti itu anak/cucu
+        if (dataBulanIni[i].level > currentLevel) {
+            familyIndices.push(i);
+        } else {
+            // Jika bertemu level yang sama atau lebih kecil, paket keluarga selesai
+            break;
         }
     }
+
+    // 2. Cari baris "Kakak" (Baris dengan level yang sama di urutan atas)
+    let targetIndex = -1;
+    for (let i = index - 1; i >= 0; i--) {
+        if (dataBulanIni[i].level === currentLevel) {
+            targetIndex = i;
+            break;
+        }
+        // Jika di tengah jalan bertemu level yang lebih rendah (induk), 
+        // berarti tidak ada kakak setingkat di blok induk yang sama.
+        if (dataBulanIni[i].level < currentLevel) {
+            break;
+        }
+    }
+
+    if (targetIndex === -1) {
+        // showToast("Sudah berada di urutan teratas dalam kelompoknya", "info");
+        return;
+    }
+
+    // 3. Eksekusi Pemindahan Paket Keluarga
+    // Ambil paket keluarga dari posisi lama
+    const movedFamily = dataBulanIni.splice(index, familyIndices.length);
+    
+    // Masukkan ke posisi target (di atas baris kakaknya)
+    dataBulanIni.splice(targetIndex, 0, ...movedFamily);
+
+    // 4. Simpan dan Segarkan Tampilan
+    renderTable();
+    
+    // Simpan ke LocalStorage agar urutan permanen
+    localStorage.setItem('premiumAppData_2026', JSON.stringify(appData));
+    
+    // showToast("Urutan berhasil dipindahkan", "success");
 }
 
 // Fungsi Edit Sederhana (Gunakan prompt jika modal belum siap)
@@ -395,7 +576,7 @@ function deleteRow(index) {
             
             // 5. Berikan notifikasi toast
             if (typeof showToast === "function") {
-                showToast("Baris berhasil dihapus", "warning");
+                // showToast("Baris berhasil dihapus", "warning");
             }
         }
     );
@@ -531,15 +712,7 @@ function openMonthSelector() {
 }
 // Fungsi Inti Toast
 function showToast(message, type = 'info') {
-    const container = document.getElementById('toastContainer');
-    const toast = document.createElement('div');
-    const icon = type === 'warning' ? '⚠️' : type === 'success' ? '✅' : 'ℹ️';
     
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-    
-    container.appendChild(toast);
-
     // Hilang otomatis setelah 3 detik
     setTimeout(() => {
         toast.style.opacity = '0';
@@ -548,28 +721,12 @@ function showToast(message, type = 'info') {
         setTimeout(() => toast.remove(), 500);
     }, 3000);
 }
-
-// --- UPDATE FUNGSI SUB-ROW & EDIT ---
-function addSubRow(index) {
-    const parent = appData[currentMonth][index];
-    if (parent.level >= 3) {
-        showToast("Batas Maksimal! Hanya diijinkan hingga 3 Sub-Baris.", "warning");
-        return;
-    }
-    appData[currentMonth].splice(index + 1, 0, {
-        id: "ID-" + Date.now(), kode: "Sub", program: "Nama Kegiatan",
-        pagu: 0, acv: 0, level: parent.level + 1, parentId: parent.id
-    });
-    renderTable();
-    showToast("Sub-baris baru berhasil ditambahkan", "success");
-}
-
 function editPagu(index) {
     const item = appData[currentMonth][index];
     const hasChildren = appData[currentMonth].some(c => c.parentId === item.id);
     
     if (hasChildren) {
-        showToast("Induk Otomatis! Nilai dihitung dari akumulasi sub-baris.", "info");
+        // showToast("Induk Otomatis! Nilai dihitung dari akumulasi sub-baris.", "info");
         return;
     }
 
@@ -587,7 +744,7 @@ function editAcv(index) {
     const hasChildren = appData[currentMonth].some(c => c.parentId === item.id);
     
     if (hasChildren) {
-        showToast("Capaian Terkunci! Induk akan mengikuti total sub-kegiatan.", "info");
+        // showToast("Capaian Terkunci! Induk akan mengikuti total sub-kegiatan.", "info");
         return;
     }
 
@@ -596,7 +753,7 @@ function editAcv(index) {
     ], 'modal-theme-acv', (res) => {
         appData[currentMonth][index].acv = parseFloat(res.val) || 0;
         renderTable();
-        showToast("Capaian diperbarui", "success");
+        // showToast("Capaian diperbarui", "success");
     });
 }
 
@@ -629,11 +786,7 @@ function closeLogoutModal() {
 }
 
 // Eksekusi Keluar
-// Di file JS utama Anda
 function confirmLogout() {
-    // HAPUS TIKET SAAT KELUAR
-    sessionStorage.clear(); 
-    
     document.body.style.opacity = "0";
     setTimeout(() => {
         window.location.href = "login.html";
