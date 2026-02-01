@@ -250,3 +250,7 @@ function renderMonthlyTrend(appData) {
         options: { responsive: true, maintainAspectRatio: false }
     });
 }
+function logoutSession() {
+    const modal = document.getElementById('logoutModal');
+    modal.classList.add('active');
+}
