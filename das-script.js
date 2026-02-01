@@ -180,3 +180,7 @@ function exportToPDF() {
         btn.innerText = originalText;
     });
 }
+function logoutSession() {
+    const modal = document.getElementById('logoutModal');
+    modal.classList.add('active');
+}
