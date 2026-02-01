@@ -64,5 +64,9 @@ function showKeterangan() {
 
     info.innerText = dataKeterangan[val] || 'Pilih kode untuk melihat detail...';
 }
+function logoutSession() {
+    const modal = document.getElementById('logoutModal');
+    modal.classList.add('active');
+}
 // Update tombol di HTML untuk memanggil fungsi ini:
 // Contoh: <button class="drop-item" onclick="openForm('TATA USAHA')">1. TATA USAHA ( TU )</button>
