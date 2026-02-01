@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <script>
-        (function() {
-            // Memeriksa status login di localStorage
-            const sessionActive = localStorage.getItem('isLoggedIn_2026');
-            
-            if (sessionActive !== 'true') {
-                // Jika tidak login, langsung arahkan ke login.html
-                window.location.replace("login.html"); 
-            }
-        })();
+     <script>
+        // Cek secara instan sebelum halaman sempat dirender
+        if (localStorage.getItem('isLoggedIn_2026') !== 'true') {
+            window.location.replace("login.html");
+        }
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
