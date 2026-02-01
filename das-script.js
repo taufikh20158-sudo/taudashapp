@@ -1,119 +1,182 @@
-// --- FUNGSI AMBIL DATA BERDASARKAN BULAN (UNTUK KARTU) ---
-function muatData() {
-    const key = 'premiumAppData_2026';
-    const saved = localStorage.getItem(key) || localStorage.getItem('appData');
-    if (!saved) return [];
+function renderTable() {
+    calculateHierarchy(); 
+    const tableBody = document.querySelector('.main-table tbody');
+    if (!tableBody) return;
+    tableBody.innerHTML = '';
 
-    try {
-        const parsed = JSON.parse(saved);
-        const selBulan = document.getElementById('SL_BULAN_DASH');
-        const bulan = selBulan ? selBulan.value : "Januari";
-        return parsed[bulan] || [];
-    } catch (e) {
-        return [];
+    // ... (kode render table Anda tetap di sini) ...
+
+    // Panggil fungsi dashboard di akhir render table
+    if (typeof renderExecutiveMonitoring === 'function') {
+        renderExecutiveMonitoring();
     }
 }
+// --- FUNGSI TAMPIL OTOMATIS SAAT HALAMAN DIMUAT ---
+window.addEventListener('DOMContentLoaded', () => {
+    // Beri sedikit delay agar script.js selesai memproses data awal
+    setTimeout(() => {
+        renderExecutiveMonitoring();
+    }, 100);
+});
+// --- FUNGSI DAS2 ------------------------------------------------------
+function renderExecutiveMonitoring() {
+    const monthSelect = document.getElementById('SL_BULAN_DASH');
+    if (monthSelect) currentMonth = monthSelect.value;
 
-// --- FUNGSI UTAMA RENDER DASHBOARD ---
-function renderExecutiveDashboard() {
-    const listRed = document.getElementById('LIST_RED');
-    const listYellow = document.getElementById('LIST_YELLOW');
-    const listGreen = document.getElementById('LIST_GREEN');
+    const container = document.querySelector('.con3-content');
+    if (!container) return;
+    container.innerHTML = ""; 
 
-    if (!listRed) return;
+    const dataBulanIni = appData[currentMonth] || [];
 
-    // 1. AMBIL DATA DARI LOCAL STORAGE
-    const key = 'premiumAppData_2026';
-    const saved = localStorage.getItem(key) || localStorage.getItem('appData');
-    
-    let tPaguTahun = 0;
-    let tAcvTahun = 0;
+    // KUNCINYA: Iterasi data asli dari urutan pertama sampai terakhir
+    for (let i = 0; i < dataBulanIni.length; i++) {
+        const item = dataBulanIni[i];
 
-    if (saved) {
-        const allData = JSON.parse(saved);
-        // Hitung akumulasi 12 bulan untuk CON1
-        for (let bulan in allData) {
-            if (Array.isArray(allData[bulan])) {
-                allData[bulan].forEach(item => {
-                    if (item.level == 0) {
-                        tPaguTahun += (parseFloat(item.pagu) || 0);
-                        tAcvTahun += (parseFloat(item.acv) || parseFloat(item.realisasi) || 0);
+        // Hanya buat kartu jika kita menemukan Level 2 (Program)
+        if (String(item.level) === "2") {
+            const l2 = item;
+            
+            // Cari kakek dan bapak (Level 0 & 1)
+            const l1 = dataBulanIni.find(p => String(p.id) === String(l2.parentId));
+            const l0 = l1 ? dataBulanIni.find(p => String(p.id) === String(l1.parentId)) : null;
+
+            let htmlContentL3 = "";
+            let hasValidChild = false;
+            let tPagu = 0, tAcv = 0;
+
+            // Cari Level 3 yang merupakan anak dari L2 ini
+            const anakL3 = dataBulanIni.filter(l3 => String(l3.parentId) === String(l2.id));
+
+            anakL3.forEach(l3 => {
+                // Cari Level 4 yang merupakan anak dari L3 ini
+                const cucuL4 = dataBulanIni.filter(l4 => String(l4.parentId) === String(l3.id));
+                let htmlContentL4 = "";
+
+                cucuL4.forEach(l4 => {
+                    const p = parseFloat(l4.pagu) || 0;
+                    const a = parseFloat(l4.acv) || 0;
+
+                    if (p > 0) {
+                        hasValidChild = true;
+                        tPagu += p; tAcv += a;
+                        const pct = (a / p) * 100;
+
+                        htmlContentL4 += `
+                            <div style="margin-bottom:6px; padding:6px 0; border-bottom:1px solid #f1f5f9;">
+                                <div style="font-size:10px; font-weight:700; color:#334155;">${l4.program}</div>
+                                <div style="display:flex; gap:12px; font-size:10px;">
+                                    <div class="l4-item"><span class="l4-label">Pagu</span><span class="l4-value">${p.toLocaleString('id-ID')}</span></div>
+                                    <div class="l4-item"><span class="l4-label">Real</span><span class="l4-value" style="color:#2563eb;">${a.toLocaleString('id-ID')}</span></div>
+                                    <div class="l4-item"><span class="l4-label">Sisa</span><span class="l4-value" style="color:#dc2626;">${(p-a).toLocaleString('id-ID')}</span></div>
+                                    <div class="l4-item"><span class="l4-label">%</span><span class="l4-value" style="color:#059669;">${pct.toFixed(1)}%</span></div>
+                                </div>
+                            </div>`;
                     }
                 });
+
+                if (htmlContentL4 !== "") {
+                    htmlContentL3 += `
+                        <div style="margin-top:8px; padding-left:10px; border-left:2px solid #e2e8f0; text-align:left;">
+                            <div style="font-size:9px; font-weight:800; color:#64748b; text-transform:uppercase;">  ${l3.program}</div>
+                            ${htmlContentL4}
+                        </div>`;
+                }
+            });
+
+            // Jika ada rincian yang valid, cetak kartunya
+            if (hasValidChild) {
+                const tPct = tPagu > 0 ? (tAcv / tPagu) * 100 : 0;
+                const card = `
+                    <div class="monitoring-card">
+                        <div class="l2-header-row" style="border:none; align-items: center;">
+                            <div class="l2-title-area">
+                                <div style="font-size:10px; font-weight:800; color:#b45309;">${l0 ? l0.kode : '---'}</div>
+                                <div style="font-size:9px; color:#94a3b8; font-weight:600; text-transform:uppercase; margin-bottom:2px;">${l1 ? l1.program : '---'}</div>
+                                <div style="font-size:13px; font-weight:900; color:#1e293b; text-transform:uppercase;">${l2.program}</div>
+                            </div>
+                            <div class="l2-summary-aside">
+                                <div class="l2-stat-item stat-pagu"><span class="l2-stat-label">Total Pagu</span><span class="l2-stat-value">${tPagu.toLocaleString('id-ID')}</span></div>
+                                <div class="l2-stat-item stat-real"><span class="l2-stat-label">Realisasi</span><span class="l2-stat-value" style="color:#2563eb;">${tAcv.toLocaleString('id-ID')}</span></div>
+                                <div class="l2-stat-item stat-sisa"><span class="l2-stat-label">Sisa</span><span class="l2-stat-value" style="color:#dc2626;">${(tPagu-tAcv).toLocaleString('id-ID')}</span></div>
+                                <div class="l2-stat-item stat-pct"><span class="l2-stat-label">Capaian</span><span class="l2-stat-value pct-value">${tPct.toFixed(1)}%</span></div>
+                            </div>
+                        </div>
+                        <div style="margin-top:5px; background:#fbfcfd; border-radius:12px; padding:10px; border:1px solid #f1f5f9;">
+                            ${htmlContentL3}
+                        </div>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', card);
             }
         }
     }
+}
+// --- 3. RENDER BULAN ----------------------------------------------------------
+// Tambahkan di dalam initGlobalListeners() Anda yang sudah ada
+function initGlobalListeners() {
+    // ... bagian pencarian ...
 
-    // Update Tampilan Atas (CON1)
-    updateTopStats(tPaguTahun, tAcvTahun);
-
-    // 2. RENDER KARTU KANBAN (CON3)
-    listRed.innerHTML = ""; listYellow.innerHTML = ""; listGreen.innerHTML = "";
-    const dataBulanIni = muatData(); 
-
-    dataBulanIni.forEach((item) => {
-        if (!item.program && !item.nama) return;
-
-        // Logika Level Terendah: Skip jika item ini punya anak
-        const punyaAnak = dataBulanIni.some(child => String(child.parentId) === String(item.id));
-        if (punyaAnak) return;
-
-        // Cari Nama Parent (Program Utama)
-        let namaParent = "PROGRAM";
-        if (item.parentId) {
-            let pRow = dataBulanIni.find(p => String(p.id) === String(item.parentId));
-            if (pRow) {
-                // Jika parent bukan level 0, cari kakeknya (level 0)
-                if (pRow.level != 0 && pRow.parentId) {
-                    let root = dataBulanIni.find(r => String(r.id) === String(pRow.parentId));
-                    namaParent = root ? root.program : pRow.program;
-                } else {
-                    namaParent = pRow.program;
-                }
+    const monthSelect = document.querySelector('.month-selector select');
+    if (monthSelect) {
+        monthSelect.addEventListener('change', function() {
+            currentMonth = this.value; 
+            renderTable(); // Ini akan memicu calculateHierarchy & render laporannya
+            
+            // Tambahkan ini sebagai pengaman tambahan
+            if (typeof renderExecutiveMonitoring === 'function') {
+                renderExecutiveMonitoring();
             }
-        } else {
-            namaParent = "MANDIRI";
-        }
+        });
+    }
+}
+// --- 3. EXPORT PDF (SESUAI ID MASTERMAIN) ----------------------------------------------------------
+function exportToPDF() {
+    const element = document.querySelector('.con3-content');
+    const selBulan = document.getElementById('SL_BULAN_DASH');
+    const bulanPilihan = (selBulan ? selBulan.value : "Januari").toUpperCase();
 
-        const pagu = parseFloat(item.pagu) || 0;
-        const acv = parseFloat(item.acv) || parseFloat(item.realisasi) || 0;
-        const pct = pagu > 0 ? (acv / pagu) * 100 : 0;
+    if (!element) return;
 
-        const cardHTML = `
-            <div class="k-card" style="border-left: 5px solid ${pct < 95 ? '#e74c3c' : pct < 100 ? '#f39c12' : '#27ae60'}; margin-bottom:15px;">
-                <div class="k-info">
-                    <div style="font-size: 8px; font-weight: 800; color: #8da2b5; text-transform: uppercase; margin-bottom: 4px;">
-                        📂 ${namaParent}
-                    </div>
-                    <span class="k-name" style="font-size: 13px; font-weight: 700;">${item.program || item.nama}</span>
-                    <div style="font-size: 10px; color: #8e9aaf; margin-top:5px;">
-                        Pagu: Rp ${pagu.toLocaleString('id-ID')}
-                    </div>
-                </div>
-                <div style="text-align: right;">
-                    <span class="k-pct" style="color: ${pct < 95 ? '#e74c3c' : pct < 100 ? '#f39c12' : '#27ae60'}">
-                        ${pct.toFixed(1)}%
-                    </span>
-                    <div style="font-size: 9px; color: #bbb;">Real: ${acv.toLocaleString('id-ID')}</div>
-                </div>
-            </div>
-        `;
+    const sekarang = new Date();
+    const tgl = sekarang.getDate();
+    const thn = sekarang.getFullYear();
+    const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+                         "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    const bulanSekarang = daftarBulan[sekarang.getMonth()];
 
-        if (pct < 95) listRed.innerHTML += cardHTML;
-        else if (pct < 100) listYellow.innerHTML += cardHTML;
-        else listGreen.innerHTML += cardHTML;
+    const opt = {
+        margin:       [10, 10, 10, 10], // Margin lebih tipis
+        filename:     `LAPORAN_RPD_${bulanPilihan}_${thn}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { 
+            scale: 2, 
+            useCORS: true,
+            letterRendering: true // Membuat teks lebih tajam meski kecil
+        },
+        // Ubah ke Portrait agar muat lebih banyak baris dalam satu halaman
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+
+    // --- HEADER LEBIH RINGKAS ---
+    const headerPDF = document.createElement('div');
+    headerPDF.className = "pdf-only-header";
+    headerPDF.innerHTML = `
+        <div style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 5px; margin-bottom: 15px; font-family: 'Poppins', sans-serif;">
+            <h3 style="margin: 0; font-weight: 900; font-size: 16px;">LAPORAN RENCANA PENARIKAN DANA (RPD)</h3>
+            <p style="margin: 2px 0; font-size: 11px; color: #444;">
+                DICETAK: ${tgl} ${bulanSekarang.toUpperCase()} ${thn} | PERIODE: ${bulanPilihan} ${thn}
+            </p>
+        </div>
+    `;
+    
+    element.prepend(headerPDF);
+    const btn = document.querySelector('.btn-export-pdf');
+    const originalText = btn.innerText;
+    btn.innerText = "Processing...";
+
+    html2pdf().set(opt).from(element).save().then(() => {
+        element.removeChild(headerPDF);
+        btn.innerText = originalText;
     });
 }
-
-// --- FUNGSI UPDATE STATISTIK TAHUNAN ---
-function updateTopStats(p, a) {
-    const pct = p > 0 ? (a / p) * 100 : 0;
-    const fmt = (v) => "Rp " + Math.floor(v).toLocaleString('id-ID');
-
-    if (document.getElementById('VIEW_PAGU_TOTAL')) document.getElementById('VIEW_PAGU_TOTAL').innerText = fmt(p);
-    if (document.getElementById('VIEW_ACV_TOTAL')) document.getElementById('VIEW_ACV_TOTAL').innerText = fmt(a);
-    if (document.getElementById('VIEW_PCT_TOTAL')) document.getElementById('VIEW_PCT_TOTAL').innerText = pct.toFixed(2) + "%";
-}
-
-// --- JALANKAN SAAT START ---
-document.addEventListener('DOMContentLoaded', renderExecutiveDashboard);
