@@ -180,7 +180,32 @@ function exportToPDF() {
         btn.innerText = originalText;
     });
 }
+/**
+ * FUNGSI LOGOUT GLOBAL
+ */
+// 1. Fungsi saat tombol KELUAR di klik
 function logoutSession() {
-    const modal = document.getElementById('logoutModal');
+    const modal = document.getElementById('LOGOUT_MODAL');
     modal.classList.add('active');
+}
+
+// 2. Fungsi saat klik BATAL
+function closeLogoutModal() {
+    const modal = document.getElementById('LOGOUT_MODAL');
+    modal.classList.remove('active');
+}
+
+// 3. Fungsi saat klik YA, KELUAR
+function confirmLogout() {
+    // Hapus Kunci Akses
+    localStorage.removeItem('isLoggedIn_2026');
+    
+    // Animasi Keluar
+    document.querySelector('.modal-card').style.transform = "scale(0.9)";
+    document.body.style.opacity = "0";
+    document.body.style.transition = "opacity 0.5s ease";
+
+    setTimeout(() => {
+        window.location.replace("login.html");
+    }, 500);
 }
