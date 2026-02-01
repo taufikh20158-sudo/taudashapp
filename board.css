@@ -1,0 +1,559 @@
+/* --- 1. VARIABLES & RESET --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Poppins:wght@400;600;700;800&family=JetBrains+Mono:wght@700;800&display=swap');
+:root {
+    --bg-master: #f0f3f7;
+    --bg-panel: #ffffff;
+    --accent-gold: #d4af37;
+    --accent-blue: #2c3e50;
+    --text-muted: #8e9aaf;
+    --shadow-outer: 10px 10px 20px #d1d9e6, -10px -10px 20px #ffffff;
+    --shadow-inner: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body, html { 
+    width: 100vw; height: 100vh; 
+    overflow: hidden; background: var(--bg-master); 
+}
+
+#MASTERMAIN { display: flex; width: 100%; height: 100%; padding: 20px; gap: 20px; }
+
+#MAIN_CONTENT_AREA { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: row; /* Berubah dari column ke row agar berdampingan */
+    gap: 25px; 
+    min-width: 0; 
+    height: 100%; /* Pastikan mengisi tinggi penuh MASTERMAIN */
+}
+/* Pastikan elemen di dalam CON2 dan DAS3 bisa menciut */
+#RIGHT_ROW {
+    flex: 1; /* Mengambil sisa ruang di sebelah kanan CON1 */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto; /* Hanya area kartu yang scroll jika sangat banyak */
+    padding-right: 10px; /* Ruang untuk scrollbar agar tidak menempel ke kartu */
+    min-width: 0; 
+}
+.group-card {
+    width: 100%;
+    min-width: 0; /* Agar kartu bisa menyesuaikan lebar container yang menyempit */
+    /* ... sisa css group-card Anda ... */
+}
+/* --- SIDEBAR----------------------------------------------------------------- */
+#CONSIDEBAR {
+    width: 200px;
+    min-width: 200px;
+    flex-basis: 200px;
+    flex-shrink: 0;
+    
+    background: var(--bg-panel);
+    border-radius: 35px;
+    box-shadow: var(--shadow-outer);
+    display: flex;
+    flex-direction: column;
+    padding: 40px 15px; 
+    align-items: center;
+    height: 100%;
+    border: 1px solid rgba(255,255,255,0.6);
+    position: relative;
+    z-index: 100;
+}
+
+/* --- MENU ITEM CONSISTENCY --- */
+.menu-item {
+    width: 100%;
+    height: 55px;
+    margin-top: 15px;
+    background: #f0f4f8;
+    border-radius: 18px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    /* Paksa menggunakan Inter agar tajam */
+    font-family: 'Inter', sans-serif !important;
+    color: #5d6d7e;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    
+    box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #ffffff;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+/* Active: Tenggelam (Inset) */
+.menu-item.active {
+    background: var(--accent-blue) !important;
+    color: var(--accent-gold) !important;
+    border: none;
+    box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.2), 
+                inset -2px -2px 5px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Ikon & Glow */
+.menu-item i, .menu-item span:first-child {
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+.menu-item.active i, .menu-item.active span:first-child {
+    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5));
+}
+/* --- SIDEBAR END----------------------------------------------------------------- */
+
+/* ============================================================
+   CON1: RINGKASAN TAHUNAN (STAY DI KIRI)
+   ============================================================ */
+
+#CON1 {
+    background: var(--bg-panel);
+    border-radius: 25px; /* Sesuaikan atau samakan dengan sidebar (35px) jika ingin seragam */
+    padding: 25px;
+    box-shadow: var(--shadow-outer);
+    display: flex;
+    flex-direction: column;
+    
+    /* --- MENYESUAIKAN TINGGI & LEBAR --- */
+    height: 100%;            /* Sama dengan tinggi CONSIDEBAR */
+    width: 380px;            /* Lebar tetap untuk mendorong konten kanan */
+    min-width: 380px;        /* Mengunci lebar agar tidak menciut */
+    
+    /* Tambahkan scroll internal jika konten di dalam CON1 sangat banyak */
+    overflow-y: auto; 
+    position: relative;      /* Tidak perlu sticky jika sudah 100% height */
+    border: 1px solid rgba(255,255,255,0.6);
+}
+
+/* --- OPTIONAL: Rapikan scrollbar agar tetap estetik --- */
+#CON1::-webkit-scrollbar {
+    width: 6px;
+}
+#CON1::-webkit-scrollbar-thumb {
+    background: var(--accent-gold);
+    border-radius: 10px;
+}
+
+/* Kotak tiap baris data (Pagu, Capaian, dll) */
+.das-item-row {
+    display: flex;
+    justify-content: space-between; /* Judul di kiri, Angka di kanan */
+    align-items: center;
+    padding: 10px 15px;
+    background: #f3eeee;
+    border-radius: 12px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.02);
+    min-width: 0; /* Proteksi agar tidak meluap saat minimize */
+    border: 1px solid rgba(255,255,255,0.8);
+}
+
+/* Style Judul (Sesuai permintaan Anda) */
+.das-title { 
+    font-size: 9px; 
+    font-weight: 800; 
+    color: var(--text-muted); 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap; /* Judul tidak boleh turun baris */
+}
+
+/* Style Nilai/Angka (Sesuai permintaan Anda) */
+.das-value { 
+    font-family: 'JetBrains Mono', monospace; 
+    font-size: 13px; 
+    font-weight: 800; 
+    color: var(--accent-blue); 
+    text-align: right;
+    white-space: nowrap; /* Angka tetap satu baris agar tidak rusak */
+}
+
+/* Warna khusus jika diperlukan */
+.gold-text { color: var(--accent-gold) !important; }
+.red-text { color: #e74c3c !important; }
+/* Container untuk membungkus Canvas agar tidak rusak saat resize */
+.chart-box {
+    position: relative;
+    width: 100%;
+    height: 220px; /* Kunci tinggi agar chart tidak memanjang ke bawah */
+    background: #f8f9fb;
+    border-radius: 20px;
+    padding: 15px;
+    margin-top: 10px;
+    box-shadow: var(--shadow-inner);
+    display: block; /* Pastikan dia mengambil ruang penuh */
+}
+
+/* Pastikan Canvas mengikuti ukuran box-nya */
+canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* ============================================================
+   CON2 & DAS3: KARTU MONITORING (MEMANJANG KE KANAN)
+   ============================================================ */
+
+#CON2, #DAS3 {
+    width: 100%; 
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+.das-group-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+/* --- GROUP CARD: VERSI TAHAN BANTING --- */
+/* --- KARTU MONITORING (CON2 & DAS3) --- */
+.group-card {
+    width: 100%; 
+    background: var(--bg-panel);
+    border-radius: 25px;
+    box-shadow: var(--shadow-outer);
+    padding: 20px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    flex-wrap: nowrap; /* Mencegah patah baris sebelum waktunya */
+    gap: 20px;
+    transition: all 0.3s ease;
+    min-width: 0; /* Penting untuk Grid */
+}
+
+.group-header {
+    width: 200px; /* Beri ruang yang pasti untuk judul kelompok */
+    flex-shrink: 0; /* Judul tidak boleh mengecil */
+    font-size: 11px;
+    font-weight: 900;
+    color: var(--text-muted);
+    border-left: 4px solid var(--accent-gold);
+    padding-left: 15px;
+    text-transform: uppercase;
+}
+
+.group-body {
+    flex: 1; 
+    min-width: 0; /* Mengizinkan progress bar untuk menciut secara dinamis */
+}
+/* --- DETAIL VALUE & PROGRESS --- */
+.mini-stat { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end; 
+    margin-bottom: 8px; 
+}
+
+.mini-stat b { 
+    font-family: 'JetBrains Mono', monospace; 
+    font-size: 20px; 
+    color: var(--accent-gold); 
+}
+
+.mini-stat span { 
+    font-family: 'JetBrains Mono', monospace; 
+    font-size: 15px; 
+    color: var(--accent-blue); 
+    font-weight: 700; 
+}
+
+.progress-bar { 
+    width: 100%; 
+    height: 10px; 
+    background: #f0f3f7; 
+    border-radius: 10px; 
+    box-shadow: var(--shadow-inner); 
+    overflow: hidden; 
+}
+
+.progress-fill { 
+    height: 100%; 
+    width: 0%; 
+    background: linear-gradient(90deg, var(--accent-gold), #b8860b); 
+    transition: 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67); 
+}
+
+.group-details {
+    display: flex; 
+    justify-content: space-between;
+    margin-top: 10px; 
+    padding-top: 8px; 
+    border-top: 1px dashed #d1d9e6;
+    /* Proteksi: Angka rincian akan turun rapi jika kolom terlalu sempit */
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.det-item { 
+    font-size: 10px; 
+    font-weight: 700; 
+    color: var(--text-muted); 
+    text-transform: uppercase; 
+    /* Memastikan item detail tidak terpotong */
+    white-space: nowrap; 
+}
+
+.det-item span { 
+    font-family: 'JetBrains Mono', monospace; 
+    color: var(--accent-blue); 
+    margin-left: 5px; 
+    font-size: 11px; 
+}
+/* ============================================================
+   THEME KHUSUS DAS3 (RUPIAH MURNI & PNBP)
+   ============================================================ */
+
+.rm-theme { border-left: 6px solid #1e3a8a !important; }
+.rm-theme .group-header { border-left: none; }
+.rm-theme b { color: #1e3a8a !important; }
+.rm-theme .progress-fill { background: linear-gradient(90deg, #1e3a8a, #3b82f6) !important; }
+
+.pnbp-theme { border-left: 6px solid #059669 !important; }
+.pnbp-theme .group-header { border-left: none; }
+.pnbp-theme b { color: #059669 !important; }
+.pnbp-theme .progress-fill { background: linear-gradient(90deg, #059669, #10b981) !important; }
+
+.red-text { color: #e74c3c !important; }
+
+/* --- STYLE JUDUL SEKSI KOLOM KANAN ------------------------------------- */
+
+/* --- STYLE JUDUL SEKSI KOLOM KANAN (VERSI BOLD) --- */
+
+.section-title {
+    font-family: 'Poppins', sans-serif;
+    /* Perbesar ukuran font */
+    font-size: 16px; 
+    /* Gunakan berat font maksimal */
+    font-weight: 900; 
+    color: var(--accent-blue);
+    text-transform: uppercase;
+    /* Spasi huruf tetap elegan namun tegas */
+    letter-spacing: 2px;
+    margin: 20px 0 12px 5px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    opacity: 1; /* Pastikan terlihat jelas */
+}
+
+/* Garis dekoratif lebih tebal dan berwarna emas */
+.section-title::after {
+    content: "";
+    flex: 1;
+    height: 3px; /* Lebih tebal dari sebelumnya */
+    background: linear-gradient(90deg, var(--accent-gold), transparent);
+    border-radius: 2px;
+}
+
+.section-title span {
+    color: #ffffff;
+    background: var(--accent-gold); /* Balik warna: Background Emas, Teks Putih */
+    padding: 4px 15px;
+    border-radius: 8px;
+    box-shadow: 3px 3px 10px rgba(212, 175, 55, 0.3);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+/* Tambahkan sedikit margin-top pada judul kedua agar ada jeda visual */
+.section-title:nth-of-type(2) {
+    margin-top: 35px;
+}
+
+/* Strategi saat layar mulai sempit (Mode Minimize/Tablet) */
+@media (max-width: 1200px) {
+    #MAIN_CONTENT_AREA {
+        flex-direction: column; /* Tumpuk vertikal hanya saat layar sempit */
+        overflow-y: auto;
+    }
+    
+    #CON1 {
+        width: 100% !important;
+        min-width: 100% !important;
+        height: auto !important;
+    }
+
+    #RIGHT_ROW {
+        overflow-y: visible; /* Scroll mengikuti halaman utama */
+    }
+}
+.chart-mini-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+.chart-mini-label span {
+    color: var(--accent-gold);
+}
+/*--------------------------------------------ANIMASI----------------------------
+/* Efek teks berdenyut jika sisa anggaran negatif */
+.red-text {
+    color: #e74c3c !important;
+    font-weight: 800;
+}
+
+/* Animasi Pulse untuk perhatian khusus */
+@keyframes pulse-red {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Jika sisa di kartu belanja sangat sedikit, beri tanda */
+.critical-budget {
+    animation: pulse-red 2s infinite;
+    color: #ff4d4d;
+}
+/*------------------------------------------DAS4--------------------------------------
+/* --- DAS4 STYLING --- */
+/* --- DAS4: ENHANCED MONITORING BULANAN --- */
+/* --- DAS4: ULTRA-CLEAN MONITORING --- */
+#DAS4 {
+    background: var(--bg-panel);
+    border-radius: 20px;
+    padding: 20px 25px;
+    box-shadow: var(--shadow-outer);
+    margin-top: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.das4-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+
+.subtitle-text {
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+    color: #a0aec0;
+    letter-spacing: 0.5px;
+    margin-top: -5px;
+}
+
+.filter-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-icon { font-size: 14px; }
+
+/* Tabel Ramping */
+.das4-table {
+    width: 100%;
+    border-collapse: collapse; /* Ganti ke collapse untuk kesan lebih ramping */
+}
+
+.das4-table th {
+    padding: 12px 10px;
+    font-size: 9px;
+    font-weight: 800;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #edf2f7;
+    text-align: center;
+}
+
+.text-left { text-align: left !important; }
+
+.total-head {
+    color: var(--accent-gold) !important;
+}
+
+.das4-table td {
+    padding: 14px 10px;
+    font-size: 11px;
+    font-family: 'Inter', sans-serif;
+    color: #4a5568;
+    border-bottom: 1px solid #f7fafc;
+    transition: background 0.2s;
+}
+
+.v-label {
+    font-weight: 800;
+    color: var(--accent-blue) !important;
+    width: 35%; /* Memberi ruang lebih untuk teks kiri */
+}
+
+.val-cell {
+    text-align: center;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.v-total {
+    text-align: center;
+    font-weight: 800;
+    background: rgba(240, 244, 248, 0.4);
+    color: var(--accent-blue);
+    border-radius: 8px;
+}
+
+/* Hover Effect */
+.das4-table tr:hover td {
+    background: rgba(237, 242, 247, 0.5);
+    cursor: default;
+}
+
+/* Dropdown Ramping */
+.input-neumorph-select-sm {
+    height: 34px;
+    border-radius: 10px;
+    background: #f0f4f8;
+    box-shadow: inset 3px 3px 6px #d1d9e6, inset -3px -3px 6px #ffffff;
+    font-size: 10px;
+    border: none;
+    padding: 0 10px;
+    font-weight: 800;
+    color: var(--accent-blue);
+    outline: none;
+}
+.das4-table td {
+    line-height: 1.4;
+    vertical-align: middle;
+}
+.das4-table small {
+    color: var(--accent-gold);
+    font-weight: bold;
+    margin-right: 3px;
+}
+.filter-wrapper {
+    display: flex;
+    gap: 10px; /* Jarak antar dropdown */
+    align-items: center;
+}
+
+.input-neumorph-select-sm {
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 8px;
+    background: #f0f4f8;
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: inset 2px 2px 5px #d1d9e6, inset -2px -2px 5px #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--accent-blue);
+    cursor: pointer;
+}
