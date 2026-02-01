@@ -1,0 +1,422 @@
+/* --- 1. VARIABLES & RESET --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Poppins:wght@400;600;700;800&family=JetBrains+Mono:wght@700;800&display=swap');
+:root {
+    --bg-master: #f0f3f7;
+    --bg-panel: #ffffff;
+    --accent-gold: #d4af37;
+    --accent-blue: #2c3e50;
+    --text-muted: #8e9aaf;
+    --shadow-outer: 10px 10px 20px #d1d9e6, -10px -10px 20px #ffffff;
+    --shadow-inner: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body, html { 
+    width: 100vw; height: 100vh; 
+    overflow: hidden; background: var(--bg-master); 
+}
+
+#MASTERMAIN { display: flex; width: 100%; height: 100%; padding: 20px; gap: 20px; }
+
+/* ----------------------- SIDEBAR------------------------------------------------------ */
+#CONSIDEBAR {
+    width: 200px;
+    min-width: 200px;
+    flex-basis: 200px;
+    flex-shrink: 0;
+    
+    background: var(--bg-panel);
+    border-radius: 35px;
+    box-shadow: var(--shadow-outer);
+    display: flex;
+    flex-direction: column;
+    padding: 40px 15px; 
+    align-items: center;
+    height: 100%;
+    border: 1px solid rgba(255,255,255,0.6);
+    position: relative;
+    z-index: 100;
+}
+
+/* --- MENU ITEM CONSISTENCY --- */
+.menu-item {
+    width: 100%;
+    height: 55px;
+    margin-top: 15px;
+    background: #f0f4f8;
+    border-radius: 18px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    /* Paksa menggunakan Inter agar tajam */
+    font-family: 'Inter', sans-serif !important;
+    color: #5d6d7e;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    
+    box-shadow: 4px 4px 8px #d1d9e6, -4px -4px 8px #ffffff;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+/* Active: Tenggelam (Inset) */
+.menu-item.active {
+    background: var(--accent-blue) !important;
+    color: var(--accent-gold) !important;
+    border: none;
+    box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.2), 
+                inset -2px -2px 5px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Ikon & Glow */
+.menu-item i, .menu-item span:first-child {
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+.menu-item.active i, .menu-item.active span:first-child {
+    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5));
+}
+/* -------------------------- CONSIDEBAR END------------------------------------------------ */
+
+/* ------------------------ MAIN CONTENT AREA ---------------------------------------------- */
+#MAIN_CONTENT_AREA { 
+    flex: 1; /* Mengambil sisa ruang di bawah CONSIDEBAR */
+    display: flex; 
+    flex-direction: column; /* Susun CON1 dan CON2 secara vertikal */
+    gap: 20px; /* Jarak antar panel */
+    min-height: 0; /* Penting agar overflow pada CON1 berfungsi */
+}
+/* ------------------------ MAIN CONTENT AREA END ------------------------------------------- */
+/* -------------------------- CON1: MENU BAR ------------------------------------------------ */
+
+/* --- MAIN CONTENT AREA: Wadah untuk CON1 & CON2 --- */
+
+/* --- CON1: AREA FORMULIR / KERTAS KERJA (POSISI ATAS) --- */
+/* --- PERBAIKAN CON1 --- */
+/* --- PENYESUAIAN CON1 --- */
+#CON1 {
+    flex: 1; 
+    background: var(--bg-panel);
+    border-radius: 25px; 
+    padding: 30px; 
+    box-shadow: var(--shadow-outer);
+    display: flex; 
+    flex-direction: column;
+    
+    /* PENTING: Biarkan overflow terlihat agar dropdown tidak terpotong */
+    position: relative; 
+    overflow: visible !important; 
+}
+
+/* --- PENYESUAIAN WRAPPER --- */
+.dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+    z-index: 999; /* Pastikan berada di atas segalanya */
+}
+
+/* --- PENYESUAIAN CONTENT DROPDOWN --- */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 55px; /* Jarak dari tombol utama */
+    left: 0;
+    width: 350px; /* Atur lebar agar tidak terlalu sempit */
+    background: #f0f4f8;
+    border-radius: 18px;
+    box-shadow: 15px 15px 30px rgba(0,0,0,0.1), -5px -5px 15px #ffffff;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.8);
+    
+    /* PENTING: Z-INDEX TINGGI */
+    z-index: 1000; 
+}
+/* --- CONTAINER UTAMA --- */
+.input-selection-container {
+    flex: 1;
+    display: flex;
+    gap: 25px;
+    justify-content: center; /* Center Middle sesuai instruksi sebelumnya */
+    align-items: center;
+    overflow: visible; /* Penting agar dropdown tidak terpotong */
+}
+
+/* --- STYLE TOMBOL UTAMA (ALOKASI & RENCANA) --- */
+.btn-input-main {
+    width: 250px;
+    height: 55px;
+    background: #f0f4f8;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 12px;
+    cursor: pointer;
+    box-shadow: 6px 6px 12px #d1d9e6, -6px -6px 12px #ffffff;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-input-main:hover {
+    transform: translateY(-3px);
+    background: #ffffff;
+    box-shadow: 10px 10px 20px #d1d9e6, -8px -8px 15px #ffffff;
+}
+
+.btn-input-main:active {
+    transform: scale(0.97);
+    box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+}
+
+/* Icon & Teks Tombol */
+.btn-icon { font-size: 18px; }
+.btn-text {
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 800;
+    font-size: 11px;
+    color: #4a5568;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+}
+
+/* --- DROPDOWN DESIGN --- */
+.dropdown-wrapper {
+    position: relative;
+    z-index: 1000;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 65px; /* Jarak aman di bawah tombol */
+    left: 0;
+    width: 320px;
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 10px;
+    box-shadow: 15px 15px 35px rgba(13, 38, 76, 0.15), -5px -5px 15px #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    animation: dropAppear 0.3s ease forwards;
+}
+
+/* Item List di dalam Dropdown */
+.drop-item {
+    width: 100%;
+    height: 48px;
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Teks kiri, Panah kanan */
+    padding: 0 15px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: 0.2s all ease;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Hover Biasa dengan Panah Muncul */
+.drop-item:hover {
+    background: #edf2f7;
+    color: var(--accent-blue);
+    padding-left: 20px;
+}
+
+/* Menambahkan tanda panah kecil di kanan list saat hover */
+.drop-item::after {
+    content: '❯';
+    font-size: 10px;
+    opacity: 0;
+    transition: 0.2s;
+    color: var(--accent-gold);
+}
+
+.drop-item:hover::after {
+    opacity: 1;
+    transform: translateX(-5px);
+}
+
+/* Efek Buka Dropdown */
+.dropdown-wrapper.active .dropdown-content {
+    display: block;
+}
+
+@keyframes dropAppear {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/*-------------------------FORM-----------------------------------
+/* Container Form di CON2 */
+.form-wrapper-horizontal {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Style Input Neumorph */
+.input-neumorph {
+    height: 40px;
+    background: #f0f4f8;
+    border: none;
+    border-radius: 10px;
+    padding: 0 15px;
+    box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #4a5568;
+    outline: none;
+    flex: 1; /* Biar input memanjang */
+}
+
+/* Tombol Simpan */
+.btn-save {
+    height: 40px;
+    padding: 0 25px;
+    background: var(--accent-blue);
+    color: var(--accent-gold);
+    border: none;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 10px;
+    cursor: pointer;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.15);
+    transition: 0.3s;
+}
+
+.btn-save:hover {
+    background: #1a252f;
+    transform: translateY(-2px);
+}
+/*----------------------------
+/* Style Select Dropdown */
+.input-neumorph-select {
+    height: 40px;
+    min-width: 150px;
+    background: #f0f4f8;
+    border: none;
+    border-radius: 10px;
+    padding: 0 10px;
+    box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    color: #4a5568;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Box Keterangan Kode */
+.keterangan-box {
+    flex: 1;
+    height: 40px;
+    background: #eef2f7;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    border-left: 4px solid var(--accent-gold);
+    box-shadow: 4px 4px 8px #d1d9e6;
+}
+
+/* -----------------------------------------CON2------------------------------- */
+/* --- PENYESUAIAN CON2 UNTUK VERTIKAL --- */
+#CON2 { 
+    height: 700px; /* Biarkan tinggi menyesuaikan konten form */
+    min-height: 100px;
+    background: var(--bg-panel);
+    border-radius: 25px; 
+    box-shadow: var(--shadow-outer);
+    padding: 30px;
+    display: flex;
+    justify-content: flex-start; /* Merapat ke kiri */
+}
+
+.form-wrapper-vertical {
+    display: flex;
+    flex-direction: column; /* Susun ke bawah */
+    gap: 15px;
+    width: 300px; /* Lebar form di sisi kiri */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    color: #8e9aaf;
+    margin-left: 5px;
+    text-transform: uppercase;
+}
+
+.input-neumorph-select {
+    width: 100%;
+    height: 42px;
+    background: #f0f4f8;
+    border: none;
+    border-radius: 12px;
+    padding: 0 15px;
+    box-shadow: inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: #4a5568;
+    outline: none;
+}
+
+/* Keterangan Box Versi Ramping */
+.keterangan-box-mini {
+    width: 100%;
+    padding: 12px;
+    background: #eef2f7;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    border-left: 4px solid var(--accent-gold);
+    line-height: 1.4;
+}
+
+.btn-save-full {
+    width: 100%;
+    height: 45px;
+    margin-top: 10px;
+    background: var(--accent-blue);
+    color: var(--accent-gold);
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 11px;
+    cursor: pointer;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.btn-save-full:hover {
+    background: #1a252f;
+    transform: translateY(-2px);
+}
