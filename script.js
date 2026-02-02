@@ -833,3 +833,35 @@ function confirmLogout() {
         window.location.replace("login.html");
     }, 500);
 }
+function importDataJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+            
+            // Validasi sederhana: pastikan data memiliki struktur bulan
+            if (importedData["Januari"] || importedData["Desember"]) {
+                if (confirm("⚠️ PERINGATAN: Mengimpor data akan menghapus data yang ada sekarang di perangkat ini. Lanjutkan?")) {
+                    appData = importedData;
+                    // Simpan ke LocalStorage agar permanen di perangkat baru
+                    localStorage.setItem('premiumAppData_2026', JSON.stringify(appData));
+                    
+                    // Refresh tampilan
+                    renderTable();
+                    updateDashboard();
+                    
+                    alert("✅ Sukses! Data berhasil dipulihkan.");
+                    location.reload(); // Reload halaman untuk sinkronisasi total
+                }
+            } else {
+                alert("❌ Format file tidak valid!");
+            }
+        } catch (err) {
+            alert("❌ Gagal membaca file: " + err.message);
+        }
+    };
+    reader.readAsText(file);
+}
