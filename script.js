@@ -833,6 +833,31 @@ function confirmLogout() {
         window.location.replace("login.html");
     }, 500);
 }
+// 1. Fungsi untuk Ekspor Data ke File .json
+function exportDataJSON() {
+    const dataStr = JSON.stringify(appData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    
+    const date = new Date();
+    const fileName = `BACKUP_SIMALU_${date.getFullYear()}_${date.getMonth()+1}_${date.getDate()}.json`;
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    if (typeof showToast === "function") showToast("Data berhasil diekspor!", "success");
+}
+
+// 2. Fungsi untuk memicu jendela pilih file
+function triggerImport() {
+    document.getElementById('importFile').click();
+}
+
+// 3. Fungsi untuk membaca file .json yang diunggah
 function importDataJSON(event) {
     const file = event.target.files[0];
     if (!file) return;
