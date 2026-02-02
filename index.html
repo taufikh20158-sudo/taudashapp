@@ -93,7 +93,18 @@
                         </select>
                     </div>
                 </div>
-
+                 <div class="action-buttons-group">
+                    <button class="btn-compact btn-save" onclick="saveToLocalStorage()">
+                        💾 SIMPAN
+                    </button>
+                    <button class="btn-compact btn-export" onclick="exportDataJSON()">
+                        📤 EKSPOR
+                    </button>
+                    <button class="btn-compact btn-import" onclick="triggerImport()">
+                        📥 IMPOR
+                    </button>
+                    <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importDataJSON(event)">
+                </div>
                 <div class="action-menu-con2">
                     <button class="btn-action btn-pdf" onclick="exportToPDF()">📄 Export PDF</button>
                     <button class="btn-action btn-save" onclick="saveToLocalStorage()">💾 Save</button>
