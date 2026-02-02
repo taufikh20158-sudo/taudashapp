@@ -1271,3 +1271,41 @@ tr.level-0-row {
 
 .btn-confirm:hover { background: #c0392b; }
 .btn-cancel:hover { box-shadow: inset 2px 2px 5px #d1d9e6; }
+
+.action-buttons-group {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+
+/* Tombol Versi Sangat Kecil & Putih Bersih */
+.btn-compact {
+    padding: 4px 8px;   /* Ukuran ekstra ramping */
+    font-size: 10px;     /* Font kecil minimalis */
+    font-weight: 700;
+    background: #ffffff !important; /* Putih Bersih */
+    color: #333333 !important;      /* Teks Gelap agar kontras */
+    border: 1px solid #dddddd;      /* Garis tepi halus */
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Hover: Sedikit abu-abu muda saat disentuh */
+.btn-compact:hover {
+    background: #f5f5f5 !important;
+    border-color: #cccccc;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Warna Ikon (Opsional: agar tetap ada sedikit pembeda) */
+.btn-compact .icon {
+    font-size: 11px;
+}
